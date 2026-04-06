@@ -13,8 +13,8 @@
             padding: 0;
             display: flex;
             flex-direction: column;
-            height: 100vh; /* بياخد طول الشاشة كلها */
-            overflow: hidden; /* بيمنع ظهور سكرول للصفحة كلها */
+            height: 100vh;
+            overflow: hidden;
         }
 
         /* شريط التحكم العلوي للمشغل */
@@ -34,7 +34,6 @@
             gap: 10px;
         }
 
-        /* تصغير الزراير عشان تناسب شريط المشغل */
         .admin-btn {
             background-color: #f39c12;
             color: #000;
@@ -47,14 +46,14 @@
             transition: 0.3s;
         }
 
-        /* زراير التنقل والتدوير */
         .nav-buttons {
             display: flex;
             gap: 5px;
+            flex-wrap: wrap; /* عشان لو الشاشة صغيرة ينزلوا سطر جديد شيك */
         }
 
-        .nav-btn {
-            background-color: #3498db;
+        /* توحيد كل زراير التحكم العلوية */
+        .nav-btn, .rotate-btn, .adblock-btn, .close-top-btn, .external-top-btn {
             color: white;
             border: none;
             padding: 6px 12px;
@@ -65,40 +64,23 @@
             transition: 0.3s;
         }
 
-        .nav-btn:hover {
-            background-color: #2980b9;
-        }
+        /* ألوان الزراير المتخصصة */
+        .nav-btn { background-color: #3498db; }
+        .nav-btn:hover { background-color: #2980b9; }
 
-        .rotate-btn {
-            background-color: #9b59b6;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            font-size: 13px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.3s;
-        }
+        .rotate-btn { background-color: #9b59b6; }
+        .rotate-btn:hover { background-color: #8e44ad; }
 
-        .rotate-btn:hover {
-            background-color: #8e44ad;
-        }
+        .close-top-btn { background-color: #c0392b; }
+        .close-top-btn:hover { background-color: #e74c3c; }
 
-        .adblock-btn {
-            background-color: #27ae60;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            font-size: 13px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.3s;
-        }
+        .external-top-btn { background-color: #8e44ad; }
+        .external-top-btn:hover { background-color: #9b59b6; }
+
+        .adblock-btn { background-color: #27ae60; }
         .adblock-btn.disabled { background-color: #c0392b; }
 
-        /* شريط القنوات قابل للتمرير لو القنوات كترت */
+        /* شريط القنوات قابل للتمرير */
         .tabs-container {
             display: flex;
             gap: 8px;
@@ -107,7 +89,6 @@
             padding-bottom: 5px;
         }
         
-        /* تجميل شكل السكرول بار بتاع القنوات */
         .tabs-container::-webkit-scrollbar { height: 6px; }
         .tabs-container::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
 
@@ -121,7 +102,7 @@
             cursor: pointer;
             font-weight: bold;
             transition: 0.3s;
-            flex-shrink: 0; /* بيمنع الزرار يكش */
+            flex-shrink: 0;
         }
 
         .tab-btn.active {
@@ -129,17 +110,14 @@
             border: 1px solid #fff;
         }
 
-        .tab-btn.hd { background-color: #b22222; }
-
-        /* تعديل الفيديو عشان يملى باقي المساحة */
+        /* تعديل الفيديو */
         .video-wrapper {
             position: relative;
             width: 100%;
-            flex-grow: 1; /* بياخد كل المساحة المتبقية من الشاشة */
+            flex-grow: 1;
             background-color: #000;
         }
 
-        /* كلاس التدوير اللي هيتطبق على الفيديو */
         .video-wrapper.rotated iframe {
             position: absolute;
             top: 50%;
@@ -149,55 +127,13 @@
             transform: translate(-50%, -50%) rotate(90deg);
         }
 
-        .close-vid-btn {
-            position: absolute;
-            top: 10px;
-            left: 10px; 
-            background-color: rgba(255, 0, 0, 0.8);
-            color: white;
-            border: 2px solid white;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            z-index: 10;
-            display: none; 
-            align-items: center;
-            justify-content: center;
-            transition: 0.3s;
-        }
-        .close-vid-btn:hover { background-color: red; transform: scale(1.1); }
-
-        .external-vid-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px; 
-            background-color: rgba(41, 128, 185, 0.8); 
-            color: white;
-            border: 2px solid white;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            z-index: 10;
-            display: none; 
-            align-items: center;
-            justify-content: center;
-            transition: 0.3s;
-        }
-        .external-vid-btn:hover { background-color: #2980b9; transform: scale(1.1); }
-
         iframe {
             width: 100%;
             height: 100%;
             border: none;
         }
 
-        /* لوحة التعديل زي ما هي */
+        /* لوحة التعديل */
         .modal {
             display: none;
             position: fixed;
@@ -251,6 +187,8 @@
             <button class="admin-btn" onclick="openModal()">⚙️ التعديل</button>
             
             <div class="nav-buttons">
+                <button id="closeVid" class="close-top-btn" onclick="closePlayer()" style="display: none;">إغلاق ✖</button>
+                <button id="externalVid" class="external-top-btn" onclick="openExternal()" style="display: none;">خارجي ↗</button>
                 <button class="nav-btn" onclick="prevStream()">السابق ⏮️</button>
                 <button class="nav-btn" onclick="nextStream()">التالي ⏭️</button>
                 <button class="rotate-btn" onclick="toggleRotation()">تدوير 🔄</button>
@@ -259,7 +197,107 @@
             <button id="adblockBtn" class="adblock-btn disabled" onclick="toggleAdBlock()">🛡️ المانع (مقفول)</button>
         </div>
 
-        <div class="tabs-container" id="mainTabs"><button id="btn1" class="tab-btn" data-link="https://tv19.koora-plus.top/chtv/ch1.php" onclick="playStream(this)">1</button>
+        <div class="tabs-container" id="mainTabs"><button id="btn1" class="tab-btn" data-link="https://vuen.link/ch?id=1" onclick="playStream(this)">1</button>
+<button id="btn2" class="tab-btn" data-link="https://vuen.link/ch?id=2" onclick="playStream(this)">2</button>
+<button id="btn3" class="tab-btn" data-link="https://vuen.link/ch?id=3" onclick="playStream(this)">3</button>
+<button id="btn4" class="tab-btn" data-link="https://vuen.link/ch?id=4" onclick="playStream(this)">4</button>
+<button id="btn5" class="tab-btn" data-link="https://vuen.link/ch?id=5" onclick="playStream(this)">5</button>
+<button id="btn6" class="tab-btn" data-link="https://vuen.link/ch?id=6" onclick="playStream(this)">6</button>
+<button id="btn7" class="tab-btn" data-link="https://vuen.link/ch?id=7" onclick="playStream(this)">7</button>
+<button id="btn8" class="tab-btn" data-link="https://vuen.link/ch?id=8" onclick="playStream(this)">8</button>
+<button id="btn9" class="tab-btn" data-link="https://vuen.link/ch?id=9" onclick="playStream(this)">9</button>
+<button id="btn10" class="tab-btn" data-link="https://vuen.link/ch?id=10" onclick="playStream(this)">10</button>
+<button id="btn11" class="tab-btn" data-link="https://vuen.link/ch?id=11" onclick="playStream(this)">11</button>
+<button id="btn12" class="tab-btn" data-link="https://vuen.link/ch?id=12" onclick="playStream(this)">12</button>
+<button id="btn13" class="tab-btn" data-link="https://vuen.link/ch?id=13" onclick="playStream(this)">13</button>
+<button id="btn14" class="tab-btn" data-link="https://vuen.link/ch?id=14" onclick="playStream(this)">14</button>
+<button id="btn15" class="tab-btn" data-link="https://vuen.link/ch?id=15" onclick="playStream(this)">15</button>
+<button id="btn16" class="tab-btn" data-link="https://vuen.link/ch?id=16" onclick="playStream(this)">16</button>
+<button id="btn17" class="tab-btn" data-link="https://vuen.link/ch?id=17" onclick="playStream(this)">17</button>
+<button id="btn18" class="tab-btn" data-link="https://vuen.link/ch?id=18" onclick="playStream(this)">18</button>
+<button id="btn19" class="tab-btn" data-link="https://vuen.link/ch?id=19" onclick="playStream(this)">19</button>
+<button id="btn20" class="tab-btn" data-link="https://vuen.link/ch?id=20" onclick="playStream(this)">20</button>
+<button id="btn21" class="tab-btn" data-link="https://vuen.link/ch?id=21" onclick="playStream(this)">21</button>
+<button id="btn22" class="tab-btn" data-link="https://vuen.link/ch?id=22" onclick="playStream(this)">22</button>
+<button id="btn23" class="tab-btn" data-link="https://vuen.link/ch?id=23" onclick="playStream(this)">23</button>
+<button id="btn24" class="tab-btn" data-link="https://vuen.link/ch?id=24" onclick="playStream(this)">24</button>
+<button id="btn25" class="tab-btn" data-link="https://vuen.link/ch?id=25" onclick="playStream(this)">25</button>
+<button id="btn26" class="tab-btn" data-link="https://vuen.link/ch?id=26" onclick="playStream(this)">26</button>
+<button id="btn27" class="tab-btn" data-link="https://vuen.link/ch?id=27" onclick="playStream(this)">27</button>
+<button id="btn28" class="tab-btn" data-link="https://vuen.link/ch?id=28" onclick="playStream(this)">28</button>
+<button id="btn29" class="tab-btn" data-link="https://vuen.link/ch?id=29" onclick="playStream(this)">29</button>
+<button id="btn30" class="tab-btn" data-link="https://vuen.link/ch?id=30" onclick="playStream(this)">30</button>
+<button id="btn31" class="tab-btn" data-link="https://vuen.link/ch?id=31" onclick="playStream(this)">31</button>
+<button id="btn32" class="tab-btn" data-link="https://vuen.link/ch?id=32" onclick="playStream(this)">32</button>
+<button id="btn33" class="tab-btn" data-link="https://vuen.link/ch?id=33" onclick="playStream(this)">33</button>
+<button id="btn34" class="tab-btn" data-link="https://vuen.link/ch?id=34" onclick="playStream(this)">34</button>
+<button id="btn35" class="tab-btn" data-link="https://vuen.link/ch?id=35" onclick="playStream(this)">35</button>
+<button id="btn36" class="tab-btn" data-link="https://vuen.link/ch?id=36" onclick="playStream(this)">36</button>
+<button id="btn37" class="tab-btn" data-link="https://vuen.link/ch?id=37" onclick="playStream(this)">37</button>
+<button id="btn38" class="tab-btn" data-link="https://vuen.link/ch?id=38" onclick="playStream(this)">38</button>
+<button id="btn39" class="tab-btn" data-link="https://vuen.link/ch?id=39" onclick="playStream(this)">39</button>
+<button id="btn40" class="tab-btn" data-link="https://vuen.link/ch?id=40" onclick="playStream(this)">40</button>
+<button id="btn41" class="tab-btn" data-link="https://vuen.link/ch?id=41" onclick="playStream(this)">41</button>
+<button id="btn42" class="tab-btn" data-link="https://vuen.link/ch?id=42" onclick="playStream(this)">42</button>
+<button id="btn43" class="tab-btn" data-link="https://vuen.link/ch?id=43" onclick="playStream(this)">43</button>
+<button id="btn44" class="tab-btn" data-link="https://vuen.link/ch?id=44" onclick="playStream(this)">44</button>
+<button id="btn45" class="tab-btn" data-link="https://vuen.link/ch?id=45" onclick="playStream(this)">45</button>
+<button id="btn46" class="tab-btn" data-link="https://vuen.link/ch?id=46" onclick="playStream(this)">46</button>
+<button id="btn47" class="tab-btn" data-link="https://vuen.link/ch?id=47" onclick="playStream(this)">47</button>
+<button id="btn48" class="tab-btn" data-link="https://vuen.link/ch?id=48" onclick="playStream(this)">48</button>
+<button id="btn49" class="tab-btn" data-link="https://vuen.link/ch?id=49" onclick="playStream(this)">49</button>
+<button id="btn50" class="tab-btn" data-link="https://vuen.link/ch?id=50" onclick="playStream(this)">50</button>
+<button id="btn51" class="tab-btn" data-link="https://vuen.link/ch?id=51" onclick="playStream(this)">51</button>
+<button id="btn52" class="tab-btn" data-link="https://vuen.link/ch?id=52" onclick="playStream(this)">52</button>
+<button id="btn53" class="tab-btn" data-link="https://vuen.link/ch?id=53" onclick="playStream(this)">53</button>
+<button id="btn54" class="tab-btn" data-link="https://vuen.link/ch?id=54" onclick="playStream(this)">54</button>
+<button id="btn55" class="tab-btn" data-link="https://vuen.link/ch?id=55" onclick="playStream(this)">55</button>
+<button id="btn56" class="tab-btn" data-link="https://vuen.link/ch?id=56" onclick="playStream(this)">56</button>
+<button id="btn57" class="tab-btn" data-link="https://vuen.link/ch?id=57" onclick="playStream(this)">57</button>
+<button id="btn58" class="tab-btn" data-link="https://vuen.link/ch?id=58" onclick="playStream(this)">58</button>
+<button id="btn59" class="tab-btn" data-link="https://vuen.link/ch?id=59" onclick="playStream(this)">59</button>
+<button id="btn60" class="tab-btn" data-link="https://vuen.link/ch?id=60" onclick="playStream(this)">60</button>
+<button id="btn61" class="tab-btn" data-link="https://vuen.link/ch?id=61" onclick="playStream(this)">61</button>
+<button id="btn62" class="tab-btn" data-link="https://vuen.link/ch?id=62" onclick="playStream(this)">62</button>
+<button id="btn63" class="tab-btn" data-link="https://vuen.link/ch?id=63" onclick="playStream(this)">63</button>
+<button id="btn64" class="tab-btn" data-link="https://vuen.link/ch?id=64" onclick="playStream(this)">64</button>
+<button id="btn65" class="tab-btn" data-link="https://vuen.link/ch?id=65" onclick="playStream(this)">65</button>
+<button id="btn66" class="tab-btn" data-link="https://vuen.link/ch?id=66" onclick="playStream(this)">66</button>
+<button id="btn67" class="tab-btn" data-link="https://vuen.link/ch?id=67" onclick="playStream(this)">67</button>
+<button id="btn68" class="tab-btn" data-link="https://vuen.link/ch?id=68" onclick="playStream(this)">68</button>
+<button id="btn69" class="tab-btn" data-link="https://vuen.link/ch?id=69" onclick="playStream(this)">69</button>
+<button id="btn70" class="tab-btn" data-link="https://vuen.link/ch?id=70" onclick="playStream(this)">70</button>
+<button id="btn71" class="tab-btn" data-link="https://vuen.link/ch?id=71" onclick="playStream(this)">71</button>
+<button id="btn72" class="tab-btn" data-link="https://vuen.link/ch?id=72" onclick="playStream(this)">72</button>
+<button id="btn73" class="tab-btn" data-link="https://vuen.link/ch?id=73" onclick="playStream(this)">73</button>
+<button id="btn74" class="tab-btn" data-link="https://vuen.link/ch?id=74" onclick="playStream(this)">74</button>
+<button id="btn75" class="tab-btn" data-link="https://vuen.link/ch?id=75" onclick="playStream(this)">75</button>
+<button id="btn76" class="tab-btn" data-link="https://vuen.link/ch?id=76" onclick="playStream(this)">76</button>
+<button id="btn77" class="tab-btn" data-link="https://vuen.link/ch?id=77" onclick="playStream(this)">77</button>
+<button id="btn78" class="tab-btn" data-link="https://vuen.link/ch?id=78" onclick="playStream(this)">78</button>
+<button id="btn79" class="tab-btn" data-link="https://vuen.link/ch?id=79" onclick="playStream(this)">79</button>
+<button id="btn80" class="tab-btn" data-link="https://vuen.link/ch?id=80" onclick="playStream(this)">80</button>
+<button id="btn81" class="tab-btn" data-link="https://vuen.link/ch?id=81" onclick="playStream(this)">81</button>
+<button id="btn82" class="tab-btn" data-link="https://vuen.link/ch?id=82" onclick="playStream(this)">82</button>
+<button id="btn83" class="tab-btn" data-link="https://vuen.link/ch?id=83" onclick="playStream(this)">83</button>
+<button id="btn84" class="tab-btn" data-link="https://vuen.link/ch?id=84" onclick="playStream(this)">84</button>
+<button id="btn85" class="tab-btn" data-link="https://vuen.link/ch?id=85" onclick="playStream(this)">85</button>
+<button id="btn86" class="tab-btn" data-link="https://vuen.link/ch?id=86" onclick="playStream(this)">86</button>
+<button id="btn87" class="tab-btn" data-link="https://vuen.link/ch?id=87" onclick="playStream(this)">87</button>
+<button id="btn88" class="tab-btn" data-link="https://vuen.link/ch?id=88" onclick="playStream(this)">88</button>
+<button id="btn89" class="tab-btn" data-link="https://vuen.link/ch?id=89" onclick="playStream(this)">89</button>
+<button id="btn90" class="tab-btn" data-link="https://vuen.link/ch?id=90" onclick="playStream(this)">90</button>
+<button id="btn91" class="tab-btn" data-link="https://vuen.link/ch?id=91" onclick="playStream(this)">91</button>
+<button id="btn92" class="tab-btn" data-link="https://vuen.link/ch?id=92" onclick="playStream(this)">92</button>
+<button id="btn93" class="tab-btn" data-link="https://vuen.link/ch?id=93" onclick="playStream(this)">93</button>
+<button id="btn94" class="tab-btn" data-link="https://vuen.link/ch?id=94" onclick="playStream(this)">94</button>
+<button id="btn95" class="tab-btn" data-link="https://vuen.link/ch?id=95" onclick="playStream(this)">95</button>
+<button id="btn96" class="tab-btn" data-link="https://vuen.link/ch?id=96" onclick="playStream(this)">96</button>
+<button id="btn97" class="tab-btn" data-link="https://vuen.link/ch?id=97" onclick="playStream(this)">97</button>
+<button id="btn98" class="tab-btn" data-link="https://vuen.link/ch?id=98" onclick="playStream(this)">98</button>
+<button id="btn99" class="tab-btn" data-link="https://vuen.link/ch?id=99" onclick="playStream(this)">99</button>
+<button id="btn100" class="tab-btn" data-link="https://vuen.link/ch?id=100" onclick="playStream(this)">100</button>
+<button id="btn1" class="tab-btn" data-link="https://tv19.koora-plus.top/chtv/ch1.php" onclick="playStream(this)">1</button>
 <button id="btn2" class="tab-btn" data-link="https://tv19.koora-plus.top/chtv/ch2.php" onclick="playStream(this)">2</button>
 <button id="btn3" class="tab-btn" data-link="https://tv19.koora-plus.top/chtv/ch3.php" onclick="playStream(this)">3</button>
 <button id="btn4" class="tab-btn" data-link="https://tv19.koora-plus.top/chtv/ch4.php" onclick="playStream(this)">4</button>
@@ -373,8 +411,6 @@
     </div>
 
     <div class="video-wrapper">
-        <button id="closeVid" class="close-vid-btn" onclick="closePlayer()" style="display: none;">✖</button>
-        <button id="externalVid" class="external-vid-btn" onclick="openExternal()" style="display: none;">↗</button>
         <iframe id="videoPlayer" src="" allowfullscreen=""></iframe>
     </div>
 
@@ -384,120 +420,7 @@
             
             <div class="form-group">
                 <label>اختار الزرار للتعديل:</label>
-                <select id="buttonSelect" onchange="loadButtonData()"><option value="btn1">قناة رقم 1</option>
-<option value="btn2">قناة رقم 2</option>
-<option value="btn3">قناة رقم 3</option>
-<option value="btn4">قناة رقم 4</option>
-<option value="btn5">قناة رقم 5</option>
-<option value="btn6">قناة رقم 6</option>
-<option value="btn7">قناة رقم 7</option>
-<option value="btn8">قناة رقم 8</option>
-<option value="btn9">قناة رقم 9</option>
-<option value="btn10">قناة رقم 10</option>
-<option value="btn11">قناة رقم 11</option>
-<option value="btn12">قناة رقم 12</option>
-<option value="btn13">قناة رقم 13</option>
-<option value="btn14">قناة رقم 14</option>
-<option value="btn15">قناة رقم 15</option>
-<option value="btn16">قناة رقم 16</option>
-<option value="btn17">قناة رقم 17</option>
-<option value="btn18">قناة رقم 18</option>
-<option value="btn19">قناة رقم 19</option>
-<option value="btn20">قناة رقم 20</option>
-<option value="btn21">قناة رقم 21</option>
-<option value="btn22">قناة رقم 22</option>
-<option value="btn23">قناة رقم 23</option>
-<option value="btn24">قناة رقم 24</option>
-<option value="btn25">قناة رقم 25</option>
-<option value="btn26">قناة رقم 26</option>
-<option value="btn27">قناة رقم 27</option>
-<option value="btn28">قناة رقم 28</option>
-<option value="btn29">قناة رقم 29</option>
-<option value="btn30">قناة رقم 30</option>
-<option value="btn31">قناة رقم 31</option>
-<option value="btn32">قناة رقم 32</option>
-<option value="btn33">قناة رقم 33</option>
-<option value="btn34">قناة رقم 34</option>
-<option value="btn35">قناة رقم 35</option>
-<option value="btn36">قناة رقم 36</option>
-<option value="btn37">قناة رقم 37</option>
-<option value="btn38">قناة رقم 38</option>
-<option value="btn39">قناة رقم 39</option>
-<option value="btn40">قناة رقم 40</option>
-<option value="btn41">قناة رقم 41</option>
-<option value="btn42">قناة رقم 42</option>
-<option value="btn43">قناة رقم 43</option>
-<option value="btn44">قناة رقم 44</option>
-<option value="btn45">قناة رقم 45</option>
-<option value="btn46">قناة رقم 46</option>
-<option value="btn47">قناة رقم 47</option>
-<option value="btn48">قناة رقم 48</option>
-<option value="btn49">قناة رقم 49</option>
-<option value="btn50">قناة رقم 50</option>
-<option value="btn51">قناة رقم 51</option>
-<option value="btn52">قناة رقم 52</option>
-<option value="btn53">قناة رقم 53</option>
-<option value="btn54">قناة رقم 54</option>
-<option value="btn55">قناة رقم 55</option>
-<option value="btn56">قناة رقم 56</option>
-<option value="btn57">قناة رقم 57</option>
-<option value="btn58">قناة رقم 58</option>
-<option value="btn59">قناة رقم 59</option>
-<option value="btn60">قناة رقم 60</option>
-<option value="btn61">قناة رقم 61</option>
-<option value="btn62">قناة رقم 62</option>
-<option value="btn63">قناة رقم 63</option>
-<option value="btn64">قناة رقم 64</option>
-<option value="btn65">قناة رقم 65</option>
-<option value="btn66">قناة رقم 66</option>
-<option value="btn67">قناة رقم 67</option>
-<option value="btn68">قناة رقم 68</option>
-<option value="btn69">قناة رقم 69</option>
-<option value="btn70">قناة رقم 70</option>
-<option value="btn71">قناة رقم 71</option>
-<option value="btn72">قناة رقم 72</option>
-<option value="btn73">قناة رقم 73</option>
-<option value="btn74">قناة رقم 74</option>
-<option value="btn75">قناة رقم 75</option>
-<option value="btn76">قناة رقم 76</option>
-<option value="btn77">قناة رقم 77</option>
-<option value="btn78">قناة رقم 78</option>
-<option value="btn79">قناة رقم 79</option>
-<option value="btn80">قناة رقم 80</option>
-<option value="btn81">قناة رقم 81</option>
-<option value="btn82">قناة رقم 82</option>
-<option value="btn83">قناة رقم 83</option>
-<option value="btn84">قناة رقم 84</option>
-<option value="btn85">قناة رقم 85</option>
-<option value="btn86">قناة رقم 86</option>
-<option value="btn87">قناة رقم 87</option>
-<option value="btn88">قناة رقم 88</option>
-<option value="btn89">قناة رقم 89</option>
-<option value="btn90">قناة رقم 90</option>
-<option value="btn91">قناة رقم 91</option>
-<option value="btn92">قناة رقم 92</option>
-<option value="btn93">قناة رقم 93</option>
-<option value="btn94">قناة رقم 94</option>
-<option value="btn95">قناة رقم 95</option>
-<option value="btn96">قناة رقم 96</option>
-<option value="btn97">قناة رقم 97</option>
-<option value="btn98">قناة رقم 98</option>
-<option value="btn99">قناة رقم 99</option>
-<option value="btn100">قناة رقم 100</option>
-
-                    <option value="btn_new_1775313046421">1</option>
-                    <option value="btn_new_1775313087333">1</option>
-                    <option value="btn_new_1775313110293">1</option>
-                    <option value="btn_new_1775313127961">1</option>
-                    <option value="btn_new_1775313144818">1</option>
-                    <option value="btn_new_1775313162951">1</option>
-                    <option value="btn_new_1775318967644">1 1 1</option>
-                    <option value="btn_new_1775327957708">Fajr 1</option>
-                    <option value="btn_new_1775330180314">1 1 1  1 1 1</option>
-                    <option value="btn_new_1775330436423">Alw 1</option>
-                    <option value="btn_new_1775397799736">test</option>
-                    <option value="btn_new_1775397843369">test 2</option>
-                </select>
+                <select id="buttonSelect" onchange="loadButtonData()"><option value="btn1">1</option><option value="btn2">2</option><option value="btn3">3</option><option value="btn4">4</option><option value="btn5">5</option><option value="btn6">6</option><option value="btn7">7</option><option value="btn8">8</option><option value="btn9">9</option><option value="btn10">10</option><option value="btn11">11</option><option value="btn12">12</option><option value="btn13">13</option><option value="btn14">14</option><option value="btn15">15</option><option value="btn16">16</option><option value="btn17">17</option><option value="btn18">18</option><option value="btn19">19</option><option value="btn20">20</option><option value="btn21">21</option><option value="btn22">22</option><option value="btn23">23</option><option value="btn24">24</option><option value="btn25">25</option><option value="btn26">26</option><option value="btn27">27</option><option value="btn28">28</option><option value="btn29">29</option><option value="btn30">30</option><option value="btn31">31</option><option value="btn32">32</option><option value="btn33">33</option><option value="btn34">34</option><option value="btn35">35</option><option value="btn36">36</option><option value="btn37">37</option><option value="btn38">38</option><option value="btn39">39</option><option value="btn40">40</option><option value="btn41">41</option><option value="btn42">42</option><option value="btn43">43</option><option value="btn44">44</option><option value="btn45">45</option><option value="btn46">46</option><option value="btn47">47</option><option value="btn48">48</option><option value="btn49">49</option><option value="btn50">50</option><option value="btn51">51</option><option value="btn52">52</option><option value="btn53">53</option><option value="btn54">54</option><option value="btn55">55</option><option value="btn56">56</option><option value="btn57">57</option><option value="btn58">58</option><option value="btn59">59</option><option value="btn60">60</option><option value="btn61">61</option><option value="btn62">62</option><option value="btn63">63</option><option value="btn64">64</option><option value="btn65">65</option><option value="btn66">66</option><option value="btn67">67</option><option value="btn68">68</option><option value="btn69">69</option><option value="btn70">70</option><option value="btn71">71</option><option value="btn72">72</option><option value="btn73">73</option><option value="btn74">74</option><option value="btn75">75</option><option value="btn76">76</option><option value="btn77">77</option><option value="btn78">78</option><option value="btn79">79</option><option value="btn80">80</option><option value="btn81">81</option><option value="btn82">82</option><option value="btn83">83</option><option value="btn84">84</option><option value="btn85">85</option><option value="btn86">86</option><option value="btn87">87</option><option value="btn88">88</option><option value="btn89">89</option><option value="btn90">90</option><option value="btn91">91</option><option value="btn92">92</option><option value="btn93">93</option><option value="btn94">94</option><option value="btn95">95</option><option value="btn96">96</option><option value="btn97">97</option><option value="btn98">98</option><option value="btn99">99</option><option value="btn100">100</option><option value="btn1">1</option><option value="btn2">2</option><option value="btn3">3</option><option value="btn4">4</option><option value="btn5">5</option><option value="btn6">6</option><option value="btn7">7</option><option value="btn8">8</option><option value="btn9">9</option><option value="btn10">10</option><option value="btn1">1</option><option value="btn2">2</option><option value="btn3">3</option><option value="btn4">4</option><option value="btn5">5</option><option value="btn6">6</option><option value="btn7">7</option><option value="btn8">8</option><option value="btn9">9</option><option value="btn10">10</option><option value="btn11">11</option><option value="btn12">12</option><option value="btn13">13</option><option value="btn14">14</option><option value="btn15">15</option><option value="btn16">16</option><option value="btn17">17</option><option value="btn18">18</option><option value="btn19">19</option><option value="btn20">20</option><option value="btn21">21</option><option value="btn22">22</option><option value="btn23">23</option><option value="btn24">24</option><option value="btn25">25</option><option value="btn26">26</option><option value="btn27">27</option><option value="btn28">28</option><option value="btn29">29</option><option value="btn30">30</option><option value="btn31">31</option><option value="btn32">32</option><option value="btn33">33</option><option value="btn34">34</option><option value="btn35">35</option><option value="btn36">36</option><option value="btn37">37</option><option value="btn38">38</option><option value="btn39">39</option><option value="btn40">40</option><option value="btn41">41</option><option value="btn42">42</option><option value="btn43">43</option><option value="btn44">44</option><option value="btn45">45</option><option value="btn46">46</option><option value="btn47">47</option><option value="btn48">48</option><option value="btn49">49</option><option value="btn50">50</option><option value="btn51">51</option><option value="btn52">52</option><option value="btn53">53</option><option value="btn54">54</option><option value="btn55">55</option><option value="btn56">56</option><option value="btn57">57</option><option value="btn58">58</option><option value="btn59">59</option><option value="btn60">60</option><option value="btn61">61</option><option value="btn62">62</option><option value="btn63">63</option><option value="btn64">64</option><option value="btn65">65</option><option value="btn66">66</option><option value="btn67">67</option><option value="btn68">68</option><option value="btn69">69</option><option value="btn70">70</option><option value="btn71">71</option><option value="btn72">72</option><option value="btn73">73</option><option value="btn74">74</option><option value="btn75">75</option><option value="btn76">76</option><option value="btn77">77</option><option value="btn78">78</option><option value="btn79">79</option><option value="btn80">80</option><option value="btn81">81</option><option value="btn82">82</option><option value="btn83">83</option><option value="btn84">84</option><option value="btn85">85</option><option value="btn86">86</option><option value="btn87">87</option><option value="btn88">88</option><option value="btn89">89</option><option value="btn90">90</option><option value="btn91">91</option><option value="btn92">92</option><option value="btn93">93</option><option value="btn94">94</option><option value="btn95">95</option><option value="btn96">96</option><option value="btn97">97</option><option value="btn98">98</option><option value="btn99">99</option><option value="btn100">100</option></select>
             </div>
 
             <div class="form-group">
@@ -524,32 +447,21 @@
     </div>
 
     <script>
-        // --- دالة توليد الـ 100 زرار أوتوماتيك ---
-        function generateButtons() {
-            const container = document.getElementById('mainTabs'); 
-            const selectMenu = document.getElementById('buttonSelect'); 
-            
-            let buttonsHTML = '';
-            let optionsHTML = '';
-
-            for (let i = 1; i <= 100; i++) {
-                const activeClass = ''; // شيلنا الـ active عشان الفيديو ما يفتحش أوتوماتيك والزراير ماتظهرش عالفاضي
-                buttonsHTML += `<button id="btn${i}" class="tab-btn" data-link="https://vuen.link/ch?id=${i}" onclick="playStream(this)">${i}</button>\n`;
-                optionsHTML += `<option value="btn${i}">قناة رقم ${i}</option>\n`;
-            }
-
-            // بنضيف الزراير في أول الشريط بتاع القنوات
-            container.insertAdjacentHTML('afterbegin', buttonsHTML);
-            // وبنضيفهم برضه في قائمة التعديل
-            selectMenu.insertAdjacentHTML('afterbegin', optionsHTML);
+        // سحب أسامي الزراير لقائمة التعديل
+        function populateSelectMenu() {
+            const selectMenu = document.getElementById('buttonSelect');
+            selectMenu.innerHTML = ''; 
+            document.querySelectorAll('#mainTabs .tab-btn').forEach(btn => {
+                selectMenu.innerHTML += `<option value="${btn.id}">${btn.innerText}</option>`;
+            });
         }
+        populateSelectMenu();
 
-        // تشغيل التوليد أول ما الصفحة تفتح
-        generateButtons();
+        // تشغيل القناة الأولى بمجرد فتح الصفحة (عشان كل الزراير تتفعل صح)
+        window.onload = function() {
+            playStream(document.getElementById('btn1'));
+        };
 
-        // --- باقي دوال التشغيل ---
-        
-        // دالة مانع الإعلانات
         let adblockEnabled = true;
         function toggleAdBlock() {
             let iframe = document.getElementById('videoPlayer');
@@ -577,9 +489,9 @@
             let link = btnElement.getAttribute('data-link');
             document.getElementById('videoPlayer').src = link;
             
-            // إظهار زراير الإغلاق والفتح الخارجي
-            document.getElementById('closeVid').style.display = 'flex';
-            document.getElementById('externalVid').style.display = 'flex';
+            // إظهار زراير الإغلاق والفتح الخارجي في الشريط العلوي كعنصر inline-block
+            document.getElementById('closeVid').style.display = 'inline-block';
+            document.getElementById('externalVid').style.display = 'inline-block';
 
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             btnElement.classList.add('active');
@@ -604,6 +516,7 @@
         }
 
         function openModal() {
+            populateSelectMenu(); 
             document.getElementById('settingsModal').style.display = 'flex';
             loadButtonData();
         }
@@ -655,11 +568,7 @@
 
             document.getElementById("mainTabs").appendChild(newBtn);
 
-            let newOption = document.createElement("option");
-            newOption.value = newId;
-            newOption.innerText = channelName;
-            document.getElementById("buttonSelect").appendChild(newOption);
-
+            populateSelectMenu();
             document.getElementById("buttonSelect").value = newId;
             loadButtonData();
 
