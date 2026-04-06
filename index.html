@@ -1,12 +1,10 @@
-<!DOCTYPE html>
 <html lang="ar" dir="rtl"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مشغل البث المباشر</title>
+    <title>مشغل البث المباشر المطور</title>
     <style>
-        /* تحويل الصفحة لمشغل فقط بدون هوامش */
         body {
-            background-color: #000;
+            background-color: #111;
             color: white;
             font-family: Arial, sans-serif;
             margin: 0;
@@ -17,14 +15,11 @@
             overflow: hidden;
         }
 
-        /* شريط التحكم العلوي للمشغل */
         .player-header {
-            background-color: #111;
+            background-color: #1a1a1a;
             border-bottom: 2px solid #222;
-            padding: 8px 10px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
         }
 
         .top-controls {
@@ -32,6 +27,7 @@
             justify-content: space-between;
             align-items: center;
             gap: 10px;
+            padding: 8px 10px;
         }
 
         .admin-btn {
@@ -49,10 +45,9 @@
         .nav-buttons {
             display: flex;
             gap: 5px;
-            flex-wrap: wrap; /* عشان لو الشاشة صغيرة ينزلوا سطر جديد شيك */
+            flex-wrap: wrap;
         }
 
-        /* توحيد كل زراير التحكم العلوية */
         .nav-btn, .rotate-btn, .adblock-btn, .close-top-btn, .external-top-btn {
             color: white;
             border: none;
@@ -64,120 +59,105 @@
             transition: 0.3s;
         }
 
-        /* ألوان الزراير المتخصصة */
         .nav-btn { background-color: #3498db; }
         .nav-btn:hover { background-color: #2980b9; }
-
         .rotate-btn { background-color: #9b59b6; }
         .rotate-btn:hover { background-color: #8e44ad; }
-
         .close-top-btn { background-color: #c0392b; }
         .close-top-btn:hover { background-color: #e74c3c; }
-
         .external-top-btn { background-color: #8e44ad; }
         .external-top-btn:hover { background-color: #9b59b6; }
-
         .adblock-btn { background-color: #27ae60; }
         .adblock-btn.disabled { background-color: #c0392b; }
 
-        /* شريط القنوات قابل للتمرير */
-        .tabs-container {
+        /* ستايل أداة الجلب التلقائي */
+        .tools-container {
+            padding: 10px;
             display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            white-space: nowrap;
-            padding-bottom: 5px;
+            justify-content: flex-start;
+            background-color: #111;
         }
-        
-        .tabs-container::-webkit-scrollbar { height: 6px; }
-        .tabs-container::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
 
-        .tab-btn {
-            background-color: #008b8b;
-            color: white;
-            border: none;
-            padding: 6px 15px;
-            font-size: 14px;
-            border-radius: 4px;
-            cursor: pointer;
+        .auto-fetch-btn {
+            background-color: transparent;
+            color: #00cec9;
+            border: 2px solid #00cec9;
+            border-radius: 30px;
+            padding: 8px 20px;
+            font-size: 16px;
             font-weight: bold;
-            transition: 0.3s;
-            flex-shrink: 0;
-        }
-
-        .tab-btn.active {
-            background-color: #004d4d;
-            border: 1px solid #fff;
-        }
-
-        /* تعديل الفيديو */
-        .video-wrapper {
-            position: relative;
-            width: 100%;
-            flex-grow: 1;
-            background-color: #000;
-        }
-
-        .video-wrapper.rotated iframe {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: calc(100vh - 75px);
-            height: 100vw;
-            transform: translate(-50%, -50%) rotate(90deg);
-        }
-
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        /* لوحة التعديل */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            justify-content: center;
+            cursor: pointer;
+            display: flex;
             align-items: center;
-            z-index: 1000;
+            gap: 8px;
+            transition: 0.3s;
         }
 
-        .modal-content {
-            background-color: #222;
-            padding: 20px;
+        .auto-fetch-btn:hover {
+            background-color: rgba(0, 206, 201, 0.1);
+            transform: scale(1.02);
+            box-shadow: 0 0 10px rgba(0, 206, 201, 0.5);
+        }
+
+        .auto-fetch-btn:disabled {
+            border-color: #555;
+            color: #555;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* توست الإشعارات */
+        #toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
             border-radius: 8px;
-            width: 90%;
-            max-width: 450px;
-            border: 1px solid #444;
-            color: white;
+            padding: 16px;
+            position: fixed;
+            z-index: 9999999;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+            font-size: 16px;
+            font-weight: bold;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.5);
+            border: 1px solid #4caac9;
+            direction: rtl;
         }
+        #toast.show {
+            visibility: visible;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+        @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
+        @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
 
+        .filter-container { display: flex; gap: 8px; padding: 5px 10px; background-color: #1a1a1a; border-bottom: 1px solid #333; overflow-x: auto; white-space: nowrap; }
+        .filter-btn { background-color: #444; color: white; border: none; padding: 5px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; transition: 0.3s; }
+        .filter-btn.active { background-color: #e74c3c; color: white; }
+        .filter-btn:hover:not(.active) { background-color: #666; }
+
+        .tabs-container { display: flex; gap: 8px; overflow-x: auto; white-space: nowrap; padding: 8px 10px; }
+        .tabs-container::-webkit-scrollbar, .filter-container::-webkit-scrollbar { height: 6px; }
+        .tabs-container::-webkit-scrollbar-thumb, .filter-container::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
+        .tab-btn { background-color: #008b8b; color: white; border: none; padding: 6px 15px; font-size: 14px; border-radius: 4px; cursor: pointer; font-weight: bold; transition: 0.3s; flex-shrink: 0; display: inline-block; }
+        .tab-btn.active { background-color: #004d4d; border: 1px solid #fff; }
+
+        .video-wrapper { position: relative; width: 100%; flex-grow: 1; background-color: #000; }
+        .video-wrapper.rotated iframe { position: absolute; top: 50%; left: 50%; width: calc(100vh - 170px); height: 100vw; transform: translate(-50%, -50%) rotate(90deg); }
+        iframe { width: 100%; height: 100%; border: none; }
+
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.9); justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { background-color: #222; padding: 20px; border-radius: 8px; width: 90%; max-width: 450px; border: 1px solid #444; color: white; }
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; margin-bottom: 5px; color: #ccc; font-size: 14px;}
-        .form-group input, .form-group select {
-            width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #555;
-            background-color: #333; color: white; box-sizing: border-box;
-        }
-
+        .form-group input, .form-group select { width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #555; background-color: #333; color: white; box-sizing: border-box; }
         .modal-buttons { display: flex; gap: 10px; margin-bottom: 15px; }
         .action-btn { flex: 1; padding: 10px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; color: white; }
-        
         .save-btn { background-color: #27ae60; } 
         .close-btn { background-color: #7f8c8d; } 
-        
-        .export-section {
-            border-top: 1px solid #444;
-            padding-top: 15px;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        
-        .add-channel-btn { background-color: #d35400; color: white; width: 100%; padding: 10px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; margin-bottom: 10px; }
-        .download-btn { background-color: #2980b9; color: white; flex: 1; padding: 10px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
-        .copy-btn { background-color: #8e44ad; color: white; flex: 1; padding: 10px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -185,7 +165,6 @@
     <div class="player-header">
         <div class="top-controls">
             <button class="admin-btn" onclick="openModal()">⚙️ التعديل</button>
-            
             <div class="nav-buttons">
                 <button id="closeVid" class="close-top-btn" onclick="closePlayer()" style="display: none;">إغلاق ✖</button>
                 <button id="externalVid" class="external-top-btn" onclick="openExternal()" style="display: none;">خارجي ↗</button>
@@ -193,11 +172,18 @@
                 <button class="nav-btn" onclick="nextStream()">التالي ⏭️</button>
                 <button class="rotate-btn" onclick="toggleRotation()">تدوير 🔄</button>
             </div>
-
-            <button id="adblockBtn" class="adblock-btn disabled" onclick="toggleAdBlock()">🛡️ المانع (مقفول)</button>
+            <button id="adblockBtn" class="adblock-btn disabled" onclick="toggleAdBlock()">🛡️ المانع</button>
         </div>
 
-        <div class="tabs-container" id="mainTabs"><button id="btn1" class="tab-btn" data-link="https://vuen.link/ch?id=1" onclick="playStream(this)">1</button>
+        <div class="tools-container">
+            <button class="auto-fetch-btn" id="autoFetchBtn" onclick="playRandomSportsChannel()">
+                ⚽ اكتشاف قناة رياضية من النت
+            </button>
+        </div>
+
+        
+
+        <div class="tabs-container" id="mainTabs"><button id="btn1" class="tab-btn" data-link="https://vuen.link/ch?id=1" onclick="playStream(this)" data-category="general">1</button>
 <button id="btn2" class="tab-btn" data-link="https://vuen.link/ch?id=2" onclick="playStream(this)">2</button>
 <button id="btn3" class="tab-btn" data-link="https://vuen.link/ch?id=3" onclick="playStream(this)">3</button>
 <button id="btn4" class="tab-btn" data-link="https://vuen.link/ch?id=4" onclick="playStream(this)">4</button>
@@ -414,60 +400,152 @@
         <iframe id="videoPlayer" src="" allowfullscreen=""></iframe>
     </div>
 
+    <div id="toast" class="">تم التعديل بنجاح ✅</div>
+
     <div id="settingsModal" class="modal" style="display: none;">
         <div class="modal-content">
             <h3 style="margin-top:0">إعدادات البث المباشر</h3>
-            
             <div class="form-group">
                 <label>اختار الزرار للتعديل:</label>
                 <select id="buttonSelect" onchange="loadButtonData()"><option value="btn1">1</option><option value="btn2">2</option><option value="btn3">3</option><option value="btn4">4</option><option value="btn5">5</option><option value="btn6">6</option><option value="btn7">7</option><option value="btn8">8</option><option value="btn9">9</option><option value="btn10">10</option><option value="btn11">11</option><option value="btn12">12</option><option value="btn13">13</option><option value="btn14">14</option><option value="btn15">15</option><option value="btn16">16</option><option value="btn17">17</option><option value="btn18">18</option><option value="btn19">19</option><option value="btn20">20</option><option value="btn21">21</option><option value="btn22">22</option><option value="btn23">23</option><option value="btn24">24</option><option value="btn25">25</option><option value="btn26">26</option><option value="btn27">27</option><option value="btn28">28</option><option value="btn29">29</option><option value="btn30">30</option><option value="btn31">31</option><option value="btn32">32</option><option value="btn33">33</option><option value="btn34">34</option><option value="btn35">35</option><option value="btn36">36</option><option value="btn37">37</option><option value="btn38">38</option><option value="btn39">39</option><option value="btn40">40</option><option value="btn41">41</option><option value="btn42">42</option><option value="btn43">43</option><option value="btn44">44</option><option value="btn45">45</option><option value="btn46">46</option><option value="btn47">47</option><option value="btn48">48</option><option value="btn49">49</option><option value="btn50">50</option><option value="btn51">51</option><option value="btn52">52</option><option value="btn53">53</option><option value="btn54">54</option><option value="btn55">55</option><option value="btn56">56</option><option value="btn57">57</option><option value="btn58">58</option><option value="btn59">59</option><option value="btn60">60</option><option value="btn61">61</option><option value="btn62">62</option><option value="btn63">63</option><option value="btn64">64</option><option value="btn65">65</option><option value="btn66">66</option><option value="btn67">67</option><option value="btn68">68</option><option value="btn69">69</option><option value="btn70">70</option><option value="btn71">71</option><option value="btn72">72</option><option value="btn73">73</option><option value="btn74">74</option><option value="btn75">75</option><option value="btn76">76</option><option value="btn77">77</option><option value="btn78">78</option><option value="btn79">79</option><option value="btn80">80</option><option value="btn81">81</option><option value="btn82">82</option><option value="btn83">83</option><option value="btn84">84</option><option value="btn85">85</option><option value="btn86">86</option><option value="btn87">87</option><option value="btn88">88</option><option value="btn89">89</option><option value="btn90">90</option><option value="btn91">91</option><option value="btn92">92</option><option value="btn93">93</option><option value="btn94">94</option><option value="btn95">95</option><option value="btn96">96</option><option value="btn97">97</option><option value="btn98">98</option><option value="btn99">99</option><option value="btn100">100</option><option value="btn1">1</option><option value="btn2">2</option><option value="btn3">3</option><option value="btn4">4</option><option value="btn5">5</option><option value="btn6">6</option><option value="btn7">7</option><option value="btn8">8</option><option value="btn9">9</option><option value="btn10">10</option><option value="btn1">1</option><option value="btn2">2</option><option value="btn3">3</option><option value="btn4">4</option><option value="btn5">5</option><option value="btn6">6</option><option value="btn7">7</option><option value="btn8">8</option><option value="btn9">9</option><option value="btn10">10</option><option value="btn11">11</option><option value="btn12">12</option><option value="btn13">13</option><option value="btn14">14</option><option value="btn15">15</option><option value="btn16">16</option><option value="btn17">17</option><option value="btn18">18</option><option value="btn19">19</option><option value="btn20">20</option><option value="btn21">21</option><option value="btn22">22</option><option value="btn23">23</option><option value="btn24">24</option><option value="btn25">25</option><option value="btn26">26</option><option value="btn27">27</option><option value="btn28">28</option><option value="btn29">29</option><option value="btn30">30</option><option value="btn31">31</option><option value="btn32">32</option><option value="btn33">33</option><option value="btn34">34</option><option value="btn35">35</option><option value="btn36">36</option><option value="btn37">37</option><option value="btn38">38</option><option value="btn39">39</option><option value="btn40">40</option><option value="btn41">41</option><option value="btn42">42</option><option value="btn43">43</option><option value="btn44">44</option><option value="btn45">45</option><option value="btn46">46</option><option value="btn47">47</option><option value="btn48">48</option><option value="btn49">49</option><option value="btn50">50</option><option value="btn51">51</option><option value="btn52">52</option><option value="btn53">53</option><option value="btn54">54</option><option value="btn55">55</option><option value="btn56">56</option><option value="btn57">57</option><option value="btn58">58</option><option value="btn59">59</option><option value="btn60">60</option><option value="btn61">61</option><option value="btn62">62</option><option value="btn63">63</option><option value="btn64">64</option><option value="btn65">65</option><option value="btn66">66</option><option value="btn67">67</option><option value="btn68">68</option><option value="btn69">69</option><option value="btn70">70</option><option value="btn71">71</option><option value="btn72">72</option><option value="btn73">73</option><option value="btn74">74</option><option value="btn75">75</option><option value="btn76">76</option><option value="btn77">77</option><option value="btn78">78</option><option value="btn79">79</option><option value="btn80">80</option><option value="btn81">81</option><option value="btn82">82</option><option value="btn83">83</option><option value="btn84">84</option><option value="btn85">85</option><option value="btn86">86</option><option value="btn87">87</option><option value="btn88">88</option><option value="btn89">89</option><option value="btn90">90</option><option value="btn91">91</option><option value="btn92">92</option><option value="btn93">93</option><option value="btn94">94</option><option value="btn95">95</option><option value="btn96">96</option><option value="btn97">97</option><option value="btn98">98</option><option value="btn99">99</option><option value="btn100">100</option></select>
             </div>
-
             <div class="form-group">
                 <label>الاسم الجديد:</label>
                 <input type="text" id="editName">
             </div>
-
             <div class="form-group">
                 <label>اللينك الجديد:</label>
                 <input type="text" id="editLink">
             </div>
-
+            <div class="form-group">
+                <label>تصنيف القناة:</label>
+                <select id="editCategory">
+                    <option value="general">عام / أخرى</option>
+                    <option value="ar_sports">رياضة عربي</option>
+                    <option value="en_sports">رياضة أجنبي</option>
+                </select>
+            </div>
             <div class="modal-buttons">
                 <button class="action-btn save-btn" onclick="applyChanges()">تطبيق التعديل</button>
                 <button class="action-btn close-btn" onclick="closeModal()">إغلاق اللوحة</button>
-            </div>
-
-            <div class="export-section">
-                <button class="add-channel-btn" onclick="addNewChannel()">➕ إضافة قناة بث جديدة</button>
-                <button class="download-btn" onclick="downloadFullFile()">💾 حفظ الملف</button>
-                <button class="copy-btn" onclick="copyFullCode()">📋 نسخ الكود</button>
             </div>
         </div>
     </div>
 
     <script>
-        // سحب أسامي الزراير لقائمة التعديل
-        function populateSelectMenu() {
-            const selectMenu = document.getElementById('buttonSelect');
-            selectMenu.innerHTML = ''; 
-            document.querySelectorAll('#mainTabs .tab-btn').forEach(btn => {
-                selectMenu.innerHTML += `<option value="${btn.id}">${btn.innerText}</option>`;
+        // دالة التنبيهات (Toast) عشان نعرف اليوزر إيه اللي بيحصل
+        function showToast(msg) {
+            let toast = document.getElementById("toast");
+            toast.innerHTML = msg;
+            toast.className = "show";
+            setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3000);
+        }
+
+        // --- الدالة السحرية لجلب قناة رياضية تلقائياً من الـ API ---
+        async function playRandomSportsChannel() {
+            let btn = document.getElementById('autoFetchBtn');
+            let originalText = btn.innerHTML;
+            
+            // تغيير شكل الزرار
+            btn.innerHTML = '⚽🔍 جاري البحث في النت...';
+            btn.disabled = true;
+            showToast("جاري اصطياد قناة رياضية... ⚽🔍⏳");
+
+            try {
+                // سحب بيانات القنوات من قاعدة بيانات iptv-org
+                let response = await fetch('https://iptv-org.github.io/api/streams.json');
+                
+                if (!response.ok) throw new Error("فشل الاتصال بقاعدة البيانات");
+                
+                let streams = await response.json();
+
+                // كلمات مفتاحية للرياضة
+                let sportsKeywords = ['sport', 'bein', 'ssc', 'kass', 'espn', 'arena', 'match', 'football', 'golf', 'nba', 'ad_sport', 'bt_sport'];
+                
+                // فلترة: نجيب القنوات الشغالة ويكون اسمها رياضي
+                let workingStreams = streams.filter(stream => {
+                    let isOnline = stream.status === "online" || stream.status === undefined;
+                    let isSports = sportsKeywords.some(kw => stream.channel && stream.channel.toLowerCase().includes(kw));
+                    return isOnline && isSports;
+                });
+
+                if (workingStreams.length === 0) {
+                    showToast("ملقيناش قنوات رياضية شغالة حالياً ❌");
+                    return;
+                }
+
+                // نختار لينك عشوائي
+                let randomIndex = Math.floor(Math.random() * workingStreams.length);
+                let randomChannel = workingStreams[randomIndex];
+
+                // إنشاء زرار مؤقت للقناة اللي سحبناها عشان اليوزر يعرف اسمها ويدوس عليها تاني
+                let newId = "btn_auto_" + new Date().getTime();
+                let newBtn = document.createElement("button");
+                newBtn.id = newId;
+                newBtn.className = "tab-btn";
+                newBtn.setAttribute("data-link", randomChannel.url);
+                newBtn.setAttribute("data-category", "en_sports"); // غالباً أجنبي
+                
+                // لو القناة ملهاش اسم واضح نديها اسم افتراضي
+                let chName = randomChannel.channel ? randomChannel.channel.replace(/\..*$/, '').toUpperCase() : "Live Sport ⚽";
+                newBtn.innerText = chName;
+                
+                newBtn.setAttribute("onclick", "playStream(this)");
+
+                document.getElementById("mainTabs").appendChild(newBtn);
+                
+                showToast("لقطنا قناة رياضية! جاري التشغيل... 🚀⚽");
+                
+                // تشغيل القناة وعمل Scroll ليها
+                playStream(newBtn);
+                newBtn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+
+            } catch (error) {
+                console.error("Error fetching random sports channel:", error);
+                showToast("حصلت مشكلة في الاتصال بقاعدة البيانات ❌");
+            } finally {
+                // نرجع الزرار لأصله
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        // --- باقي دوال المشغل ---
+        function playStream(btnElement) {
+            let link = btnElement.getAttribute('data-link');
+            document.getElementById('videoPlayer').src = link;
+            document.getElementById('closeVid').style.display = 'inline-block';
+            document.getElementById('externalVid').style.display = 'inline-block';
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btnElement.classList.add('active');
+        }
+
+        function closePlayer() {
+            document.getElementById('videoPlayer').src = "";
+            document.getElementById('closeVid').style.display = 'none';
+            document.getElementById('externalVid').style.display = 'none';
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        }
+
+        function filterChannels(category, filterBtnElement) {
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            if(filterBtnElement) filterBtnElement.classList.add('active');
+            let tabs = document.querySelectorAll('#mainTabs .tab-btn');
+            tabs.forEach(tab => {
+                let tabCategory = tab.getAttribute('data-category') || 'general';
+                if (category === 'all' || tabCategory === category) {
+                    tab.style.display = 'inline-block';
+                } else {
+                    tab.style.display = 'none';
+                }
             });
         }
-        populateSelectMenu();
-
-        // تشغيل القناة الأولى بمجرد فتح الصفحة (عشان كل الزراير تتفعل صح)
-        window.onload = function() {
-            playStream(document.getElementById('btn1'));
-        };
 
         let adblockEnabled = true;
         function toggleAdBlock() {
             let iframe = document.getElementById('videoPlayer');
             let btn = document.getElementById('adblockBtn');
             adblockEnabled = !adblockEnabled;
-            
             if (adblockEnabled) {
                 iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin');
                 btn.innerText = '🛡️ المانع (شغال)';
@@ -477,52 +555,18 @@
                 btn.innerText = '🛡️ المانع (مقفول)';
                 btn.classList.add('disabled');
             }
-            
-            let currentSrc = iframe.src;
-            if(currentSrc && currentSrc !== window.location.href) {
-                iframe.src = currentSrc;
-            }
+            if(iframe.src && iframe.src !== window.location.href) iframe.src = iframe.src;
         }
 
-        // تشغيل البث
-        function playStream(btnElement) {
-            let link = btnElement.getAttribute('data-link');
-            document.getElementById('videoPlayer').src = link;
-            
-            // إظهار زراير الإغلاق والفتح الخارجي في الشريط العلوي كعنصر inline-block
-            document.getElementById('closeVid').style.display = 'inline-block';
-            document.getElementById('externalVid').style.display = 'inline-block';
-
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            btnElement.classList.add('active');
-        }
-
-        // إغلاق المشغل
-        function closePlayer() {
-            document.getElementById('videoPlayer').src = "";
-            document.getElementById('closeVid').style.display = 'none';
-            document.getElementById('externalVid').style.display = 'none';
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        }
-
-        // الفتح الخارجي
-        function openExternal() {
-            let currentLink = document.getElementById('videoPlayer').src;
-            if (currentLink && currentLink.trim() !== "" && currentLink !== window.location.href) {
-                window.open(currentLink, '_blank'); 
-            } else {
-                alert("مفيش بث شغال حالياً عشان نفتحه!");
-            }
-        }
-
-        function openModal() {
-            populateSelectMenu(); 
-            document.getElementById('settingsModal').style.display = 'flex';
-            loadButtonData();
-        }
-
-        function closeModal() {
-            document.getElementById('settingsModal').style.display = 'none';
+        function openModal() { populateSelectMenu(); document.getElementById('settingsModal').style.display = 'flex'; loadButtonData(); }
+        function closeModal() { document.getElementById('settingsModal').style.display = 'none'; }
+        
+        function populateSelectMenu() {
+            const selectMenu = document.getElementById('buttonSelect');
+            selectMenu.innerHTML = ''; 
+            document.querySelectorAll('#mainTabs .tab-btn').forEach(btn => {
+                selectMenu.innerHTML += `<option value="${btn.id}">${btn.innerText}</option>`;
+            });
         }
 
         function loadButtonData() {
@@ -531,102 +575,49 @@
             if(btn) {
                 document.getElementById('editName').value = btn.innerText;
                 document.getElementById('editLink').value = btn.getAttribute('data-link');
+                document.getElementById('editCategory').value = btn.getAttribute('data-category') || 'general';
             }
         }
 
         function applyChanges() {
             let id = document.getElementById('buttonSelect').value;
             let btn = document.getElementById(id);
-            let name = document.getElementById('editName').value;
-            let link = document.getElementById('editLink').value;
-
-            btn.innerText = name;
-            btn.setAttribute('data-link', link);
-            
-            let opt = document.querySelector(`#buttonSelect option[value="${id}"]`);
-            if(opt) opt.innerText = name;
-
+            btn.innerText = document.getElementById('editName').value;
+            btn.setAttribute('data-link', document.getElementById('editLink').value);
+            btn.setAttribute('data-category', document.getElementById('editCategory').value); 
             if (btn.classList.contains('active')) playStream(btn);
-            alert("تم تطبيق التعديل بنجاح!");
+            let activeFilter = document.querySelector('.filter-btn.active');
+            if(activeFilter) activeFilter.click();
+            showToast("تم التعديل بنجاح ✅");
         }
-
-        function addNewChannel() {
-            let channelName = prompt("اكتب اسم القناة أو البث الجديد:");
-            if (!channelName || channelName.trim() === "") return;
-
-            let channelLink = prompt("اكتب لينك البث (الرابط):");
-            if (!channelLink) channelLink = "";
-
-            let newId = "btn_new_" + new Date().getTime();
-
-            let newBtn = document.createElement("button");
-            newBtn.id = newId;
-            newBtn.className = "tab-btn";
-            newBtn.setAttribute("data-link", channelLink);
-            newBtn.innerText = channelName;
-            newBtn.setAttribute("onclick", "playStream(this)");
-
-            document.getElementById("mainTabs").appendChild(newBtn);
-
-            populateSelectMenu();
-            document.getElementById("buttonSelect").value = newId;
-            loadButtonData();
-
-            alert("تم إضافة القناة بنجاح!");
-        }
-
-        function downloadFullFile() {
-            closeModal(); 
-            setTimeout(() => {
-                let content = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-                let blob = new Blob([content], { type: 'text/html' });
-                let a = document.createElement('a');
-                a.href = URL.createObjectURL(blob);
-                a.download = 'my_player.html';
-                a.click();
-            }, 100);
-        }
-
-        function copyFullCode() {
-            closeModal();
-            setTimeout(() => {
-                let content = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-                navigator.clipboard.writeText(content).then(() => {
-                    alert("تم نسخ الكود بالكامل!");
-                });
-            }, 100);
-        }
-
-        // دالة الانتقال للسيرفر التالي
+        
         function nextStream() {
-            let tabs = Array.from(document.querySelectorAll('#mainTabs .tab-btn'));
+            let tabs = Array.from(document.querySelectorAll('#mainTabs .tab-btn')).filter(btn => btn.style.display !== 'none');
             if (tabs.length === 0) return;
-
             let activeIndex = tabs.findIndex(btn => btn.classList.contains('active'));
             let nextIndex = (activeIndex + 1) % tabs.length; 
-            
             playStream(tabs[nextIndex]);
             tabs[nextIndex].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
         }
 
-        // دالة الانتقال للسيرفر السابق
         function prevStream() {
-            let tabs = Array.from(document.querySelectorAll('#mainTabs .tab-btn'));
+            let tabs = Array.from(document.querySelectorAll('#mainTabs .tab-btn')).filter(btn => btn.style.display !== 'none');
             if (tabs.length === 0) return;
-
             let activeIndex = tabs.findIndex(btn => btn.classList.contains('active'));
             if (activeIndex === -1) activeIndex = 0;
-
             let prevIndex = (activeIndex - 1 + tabs.length) % tabs.length; 
-            
             playStream(tabs[prevIndex]);
             tabs[prevIndex].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
         }
 
-        // دالة تدوير الشاشة
-        function toggleRotation() {
-            let videoWrapper = document.querySelector('.video-wrapper');
-            videoWrapper.classList.toggle('rotated');
-        }
+        function toggleRotation() { document.querySelector('.video-wrapper').classList.toggle('rotated'); }
+        function openExternal() { if(document.getElementById('videoPlayer').src) window.open(document.getElementById('videoPlayer').src, '_blank'); }
+
+        window.onload = function() {
+            populateSelectMenu();
+            let firstBtn = document.getElementById('btn1');
+            if(firstBtn) playStream(firstBtn);
+        };
     </script>
+
 </body></html>
