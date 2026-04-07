@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl"><head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="user-scalable=yes">
     <title>مشغل البث المباشر</title>
     <style>
         /* تحويل الصفحة لمشغل فقط بدون هوامش */
@@ -234,10 +234,6 @@
             <button id="adblockBtn" class="adblock-btn" onclick="toggleAdBlock()">🛡️ المانع (شغال)</button>
         </div>
 
-        <div class="tools-container">
-            
-        </div>
-        
         <div class="tabs-container" id="mainTabs"><button class="auto-fetch-btn" id="autoFetchBtn" onclick="playRandomSportsChannel()">
                 ⚽ اكتشاف قناة رياضية من النت
             </button><button id="btn1" class="tab-btn" data-link="https://vuen.link/ch?id=1" onclick="playStream(this)" data-category="general">1</button>
@@ -491,22 +487,22 @@
     </div>
 
     <script>
-        // سحب أسامي الزراير لقائمة التعديل
         function populateSelectMenu() {
             const selectMenu = document.getElementById('buttonSelect');
             selectMenu.innerHTML = ''; 
             document.querySelectorAll('#mainTabs .tab-btn').forEach(btn => {
-                selectMenu.innerHTML += `<option value="${btn.id}">${btn.innerText}</option>`;
+                let opt = document.createElement('option');
+                opt.value = btn.id;
+                opt.innerText = btn.innerText;
+                selectMenu.appendChild(opt);
             });
         }
         populateSelectMenu();
 
-        // تشغيل أول قناة لو موجودة بمجرد فتح الصفحة
         window.onload = function() {
             let firstBtn = document.querySelector('#mainTabs .tab-btn');
-            if(firstBtn) {
-                playStream(firstBtn);
-            }
+            if(firstBtn) playStream(firstBtn);
+            populateSelectMenu();
         };
 
         let adblockEnabled = true;
@@ -526,26 +522,19 @@
             }
             
             let currentSrc = iframe.src;
-            if(currentSrc && currentSrc !== window.location.href) {
-                iframe.src = currentSrc;
-            }
+            if(currentSrc && currentSrc !== window.location.href) iframe.src = currentSrc;
         }
 
-        // تشغيل البث
         function playStream(btnElement) {
             let link = btnElement.getAttribute('data-link');
             document.getElementById('videoPlayer').src = link;
-            
-            // إظهار زراير التحكم العلوية
             document.getElementById('closeVid').style.display = 'inline-block';
             document.getElementById('externalVid').style.display = 'inline-block';
             document.getElementById('copyLinkBtn').style.display = 'inline-block';
-
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             btnElement.classList.add('active');
         }
 
-        // إغلاق المشغل
         function closePlayer() {
             document.getElementById('videoPlayer').src = "";
             document.getElementById('closeVid').style.display = 'none';
@@ -554,25 +543,25 @@
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         }
 
-        // الفتح الخارجي
         function openExternal() {
             let currentLink = document.getElementById('videoPlayer').src;
             if (currentLink && currentLink.trim() !== "" && currentLink !== window.location.href) {
                 window.open(currentLink, '_blank'); 
             } else {
-                alert("مفيش بث شغال حالياً عشان نفتحه!");
+                alert("مفيش بث شغال حالياً!");
             }
         }
 
-        // نسخ الرابط الحالي
         function copyCurrentLink() {
             let currentLink = document.getElementById('videoPlayer').src;
             if (currentLink && currentLink.trim() !== "" && currentLink !== window.location.href) {
-                navigator.clipboard.writeText(currentLink).then(() => {
-                    alert("تم نسخ رابط القناة بنجاح! 📋\nالرابط: " + currentLink);
-                });
-            } else {
-                alert("مفيش بث شغال حالياً عشان ننسخ الرابط بتاعه!");
+                let textArea = document.createElement("textarea");
+                textArea.value = currentLink;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                alert("تم نسخ رابط القناة بنجاح!");
             }
         }
 
@@ -592,9 +581,6 @@
             if(btn) {
                 document.getElementById('editName').value = btn.innerText;
                 document.getElementById('editLink').value = btn.getAttribute('data-link');
-            } else {
-                document.getElementById('editName').value = "";
-                document.getElementById('editLink').value = "";
             }
         }
 
@@ -602,199 +588,126 @@
             let id = document.getElementById('buttonSelect').value;
             let btn = document.getElementById(id);
             if(!btn) return;
-            
-            let name = document.getElementById('editName').value;
-            let link = document.getElementById('editLink').value;
-
-            btn.innerText = name;
-            btn.setAttribute('data-link', link);
-            
-            let opt = document.querySelector(`#buttonSelect option[value="${id}"]`);
-            if(opt) opt.innerText = name;
-
+            btn.innerText = document.getElementById('editName').value;
+            btn.setAttribute('data-link', document.getElementById('editLink').value);
+            populateSelectMenu();
             if (btn.classList.contains('active')) playStream(btn);
-            alert("تم تطبيق التعديل بنجاح!");
+            alert("تم التعديل!");
         }
 
         function deleteChannel() {
             let id = document.getElementById('buttonSelect').value;
             let btn = document.getElementById(id);
-            
-            if(btn) {
-                let confirmAction = confirm("متأكد إنك عايز تحذف القناة دي؟");
-                if(confirmAction) {
-                    if(btn.classList.contains('active')) {
-                        closePlayer();
-                    }
-                    btn.remove();
-                    populateSelectMenu();
-                    loadButtonData();
-                    alert("تم حذف القناة بنجاح!");
-                }
+            if(btn && confirm("حذف القناة؟")) {
+                if(btn.classList.contains('active')) closePlayer();
+                btn.remove();
+                populateSelectMenu();
+                alert("تم الحذف!");
             }
         }
 
         function addNewChannel() {
-            let channelName = prompt("اكتب اسم القناة أو البث الجديد:");
-            if (!channelName || channelName.trim() === "") return;
-
-            let channelLink = prompt("اكتب لينك البث (الرابط):");
-            if (!channelLink) channelLink = "";
-
-            let newId = "btn_new_" + new Date().getTime();
-
-            let newBtn = document.createElement("button");
-            newBtn.id = newId;
-            newBtn.className = "tab-btn";
-            newBtn.setAttribute("data-link", channelLink);
-            newBtn.innerText = channelName;
-            newBtn.setAttribute("onclick", "playStream(this)");
-
-            document.getElementById("mainTabs").appendChild(newBtn);
-
+            let inputLinks = prompt("حط اللينكات هنا:");
+            if (!inputLinks) return;
+            let linksArray = inputLinks.split(/[\s,\n]+/).filter(l => l.trim() !== "");
+            let baseName = prompt("الاسم الأساسي:", "قناة");
+            let timestamp = new Date().getTime();
+            linksArray.forEach((link, index) => {
+                let newBtn = document.createElement("button");
+                newBtn.id = "btn_new_" + timestamp + "_" + index;
+                newBtn.className = "tab-btn";
+                newBtn.setAttribute("data-link", link);
+                newBtn.innerText = linksArray.length > 1 ? `${baseName} ${index + 1}` : baseName;
+                newBtn.setAttribute("onclick", "playStream(this)");
+                document.getElementById("mainTabs").appendChild(newBtn);
+            });
             populateSelectMenu();
-            document.getElementById("buttonSelect").value = newId;
-            loadButtonData();
-
-            alert("تم إضافة القناة بنجاح!");
         }
 
         function downloadFullFile() {
             closeModal(); 
-            setTimeout(() => {
-                let content = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-                let blob = new Blob([content], { type: 'text/html' });
-                let a = document.createElement('a');
-                a.href = URL.createObjectURL(blob);
-                a.download = 'my_player.html';
-                a.click();
-            }, 100);
+            let content = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+            let blob = new Blob([content], { type: 'text/html' });
+            let a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'my_player.html';
+            a.click();
         }
 
+        // --- الدالة المعدلة اللي كانت بايظة عندك ---
         function copyFullCode() {
             closeModal();
-            setTimeout(() => {
-                let content = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-                navigator.clipboard.writeText(content).then(() => {
-                    alert("تم نسخ الكود بالكامل!");
-                });
-            }, 100);
+            let content = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+            
+            // إنشاء عنصر نصي وهمي للنسخ لضمان العمل على كل المتصفحات والأنظمة
+            let textArea = document.createElement("textarea");
+            textArea.value = content;
+            textArea.style.position = "fixed";
+            textArea.style.left = "-9999px";
+            textArea.style.top = "0";
+            document.body.appendChild(textArea);
+            textArea.select();
+            
+            try {
+                let successful = document.execCommand('copy');
+                if(successful) alert("تم نسخ الكود بالكامل بنجاح! ✅");
+            } catch (err) {
+                alert("عذراً، المتصفح رفض النسخ التلقائي.");
+            }
+            document.body.removeChild(textArea);
         }
 
         function nextStream() {
             let tabs = Array.from(document.querySelectorAll('#mainTabs .tab-btn'));
-            if (tabs.length === 0) return;
-
             let activeIndex = tabs.findIndex(btn => btn.classList.contains('active'));
             let nextIndex = (activeIndex + 1) % tabs.length; 
-            
             playStream(tabs[nextIndex]);
-            tabs[nextIndex].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+            tabs[nextIndex].scrollIntoView({ behavior: 'smooth', inline: 'center' });
         }
 
         function prevStream() {
             let tabs = Array.from(document.querySelectorAll('#mainTabs .tab-btn'));
-            if (tabs.length === 0) return;
-
             let activeIndex = tabs.findIndex(btn => btn.classList.contains('active'));
-            if (activeIndex === -1) activeIndex = 0;
-
             let prevIndex = (activeIndex - 1 + tabs.length) % tabs.length; 
-            
             playStream(tabs[prevIndex]);
-            tabs[prevIndex].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+            tabs[prevIndex].scrollIntoView({ behavior: 'smooth', inline: 'center' });
         }
 
         function toggleRotation() {
-            let videoWrapper = document.querySelector('.video-wrapper');
-            videoWrapper.classList.toggle('rotated');
+            document.querySelector('.video-wrapper').classList.toggle('rotated');
         }
 
-        // دالة اكتشاف وتشغيل قناة رياضية عشوائية
         function playRandomSportsChannel() {
             const sportsChannels = [
-                "https://live.aflam4you.net/zremb472.php?vid=5407&aflam_s=1&aflam_w=360&aflam_h=250&aflam_k=11623324",
-                "https://tv19.koora-plus.top/chtv/ch1.php",
-                "https://tv19.koora-plus.top/chtv/ch2.php",
-                "https://tv19.koora-plus.top/chtv/ch3.php",
-                "https://tv19.koora-plus.top/chtv/ch4.php"
+                { name: "Aflam4You Sport", url: "https://live.aflam4you.net/zremb472.php?vid=5407&aflam_s=1&aflam_w=360&aflam_h=250&aflam_k=11623324" },
+                { name: "Koora Plus 1", url: "https://tv19.koora-plus.top/chtv/ch1.php" },
+                { name: "Koora Plus 2", url: "https://tv19.koora-plus.top/chtv/ch2.php" },
+                { name: "Koora Plus 3", url: "https://tv19.koora-plus.top/chtv/ch3.php" },
+                { name: "Koora Plus 4", url: "https://tv19.koora-plus.top/chtv/ch4.php" }
             ];
-
+            let existingLinks = Array.from(document.querySelectorAll('#mainTabs .tab-btn')).map(btn => btn.getAttribute('data-link'));
+            let availableChannels = sportsChannels.filter(channel => !existingLinks.includes(channel.url));
+            if (availableChannels.length === 0) {
+                alert("كل القنوات المتاحة اتضافت قبل كده!");
+                return;
+            }
             const btn = document.getElementById('autoFetchBtn');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = "⏳ جاري البحث عن قناة...";
-            btn.disabled = true;
-
+            btn.innerHTML = "⏳ جاري البحث...";
             setTimeout(() => {
-                const randomIndex = Math.floor(Math.random() * sportsChannels.length);
-                const randomUrl = sportsChannels[randomIndex];
-
-                document.getElementById('videoPlayer').src = randomUrl;
-
-                // إظهار زراير التحكم
-                document.getElementById('closeVid').style.display = 'inline-block';
-                document.getElementById('externalVid').style.display = 'inline-block';
-                document.getElementById('copyLinkBtn').style.display = 'inline-block';
-
-                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-                
+                const randomChannel = availableChannels[Math.floor(Math.random() * availableChannels.length)];
+                let newBtn = document.createElement("button");
+                newBtn.id = "btn_auto_" + new Date().getTime();
+                newBtn.className = "tab-btn";
+                newBtn.setAttribute("data-link", randomChannel.url);
+                newBtn.innerText = "⭐ " + randomChannel.name; 
+                newBtn.setAttribute("onclick", "playStream(this)");
+                document.getElementById("mainTabs").appendChild(newBtn);
+                populateSelectMenu();
+                playStream(newBtn);
+                newBtn.scrollIntoView({ behavior: 'smooth', inline: 'center' });
+                btn.innerHTML = "⚽ اكتشاف قناة رياضية من النت";
             }, 500); 
         }
-// دالة اكتشاف وتشغيل قناة رياضية عشوائية وإضافتها للشريط
-function playRandomSportsChannel() {
-    // 1. القائمة بقت بتحتوي على "اسم القناة" و "اللينك" مع بعض
-    const sportsChannels = [
-        { name: "Aflam4You Sport", url: "https://live.aflam4you.net/zremb472.php?vid=5407&aflam_s=1&aflam_w=360&aflam_h=250&aflam_k=11623324" },
-        { name: "Koora Plus 1", url: "https://tv19.koora-plus.top/chtv/ch1.php" },
-        { name: "Koora Plus 2", url: "https://tv19.koora-plus.top/chtv/ch2.php" },
-        { name: "Koora Plus 3", url: "https://tv19.koora-plus.top/chtv/ch3.php" },
-        { name: "Koora Plus 4", url: "https://tv19.koora-plus.top/chtv/ch4.php" }
-        // تقدر تزود هنا أي قنوات تانية بنفس الشكل ده
-    ];
-
-    const btn = document.getElementById('autoFetchBtn');
-    const originalText = btn.innerHTML;
-    btn.innerHTML = "⏳ جاري البحث عن قناة...";
-    btn.disabled = true;
-
-    setTimeout(() => {
-        // نختار قناة عشوائية (اسم ولينك)
-        const randomIndex = Math.floor(Math.random() * sportsChannels.length);
-        const randomChannel = sportsChannels[randomIndex];
-
-        // نعمل زرار جديد للقناة دي في الشريط أوتوماتيك
-        let newId = "btn_auto_" + new Date().getTime();
-        let newBtn = document.createElement("button");
-        newBtn.id = newId;
-        newBtn.className = "tab-btn";
-        newBtn.setAttribute("data-link", randomChannel.url);
-        
-        // حطينا إيموجي ⭐ عشان تميز إن القناة دي جاتلك من الاكتشاف
-        newBtn.innerText = "⭐ " + randomChannel.name; 
-        newBtn.setAttribute("onclick", "playStream(this)");
-
-        // نضيف الزرار في شريط القنوات
-        document.getElementById("mainTabs").appendChild(newBtn);
-
-        // نحدث قائمة التعديل عشان الزرار الجديد يظهر فيها لو حبيت تعدله أو تحذفه بعدين
-        populateSelectMenu();
-        loadButtonData();
-        
-        // نشغل القناة عن طريق محاكاة الضغط على الزرار الجديد اللي لسه ضايفينه
-        playStream(newBtn);
-        
-        // نخلي الشريط يتحرك أوتوماتيك للزرار الجديد عشان يظهر قدامك
-        newBtn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-
-        // نرجع زرار البحث لشكله الأصلي
-        btn.innerHTML = originalText;
-        btn.disabled = false;
-        
-    }, 500); 
-}
     </script>
 
 </body></html>
