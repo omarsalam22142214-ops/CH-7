@@ -64,7 +64,6 @@
             transition: 0.3s;
         }
 
-        /* ألوان الزراير المتخصصة */
         .nav-btn { background-color: #3498db; }
         .nav-btn:hover { background-color: #2980b9; }
 
@@ -77,7 +76,6 @@
         .external-top-btn { background-color: #8e44ad; }
         .external-top-btn:hover { background-color: #9b59b6; }
 
-        /* زرار النسخ الجديد */
         .copy-top-btn { background-color: #f39c12; color: #000; }
         .copy-top-btn:hover { background-color: #e67e22; color: white; }
 
@@ -114,6 +112,14 @@
             border: 1px solid #fff;
         }
 
+        /* تنسيقات القنوات أثناء التحديد */
+        .tab-btn.selected-channel {
+            background-color: #8e44ad !important;
+            border: 2px dashed #f1c40f;
+            box-shadow: 0 0 10px rgba(142, 68, 173, 0.8);
+            transform: scale(0.95);
+        }
+
         /* تعديل الفيديو */
         .video-wrapper {
             position: relative;
@@ -137,7 +143,7 @@
             border: none;
         }
 
-        /* لوحة التعديل */
+        /* المودال الأساسي */
         .modal {
             display: none;
             position: fixed;
@@ -158,6 +164,73 @@
             color: white;
         }
 
+        /* مودال تعديل الكود بالكامل */
+        .bulk-modal-content {
+            background-color: #1a1a1a;
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 800px;
+            border: 2px solid #3498db;
+            color: white;
+            text-align: center;
+        }
+
+        .bulk-textarea {
+            width: 100%;
+            height: 250px;
+            background-color: #0d0d0d;
+            color: #2ecc71; /* لون أخضر للأكواد */
+            font-family: monospace;
+            font-size: 14px;
+            border: 1px solid #333;
+            border-radius: 5px;
+            padding: 10px;
+            direction: ltr;
+            text-align: left;
+            resize: vertical;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+        }
+
+        .bulk-textarea:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .bulk-btn-group {
+            display: flex;
+            gap: 15px;
+            justify-content: space-between;
+        }
+
+        .bulk-save-btn {
+            flex: 1;
+            background-color: #27ae60;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .bulk-save-btn:hover { background-color: #2ecc71; }
+
+        .bulk-cancel-btn {
+            flex: 1;
+            background-color: #e74c3c;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .bulk-cancel-btn:hover { background-color: #c0392b; }
+
+
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; margin-bottom: 5px; color: #ccc; font-size: 14px;}
         .form-group input, .form-group select {
@@ -169,7 +242,7 @@
         .action-btn { flex: 1; padding: 10px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; color: white; }
         
         .save-btn { background-color: #27ae60; } 
-        .delete-btn { background-color: #e74c3c; } 
+        .delete-btn-modal { background-color: #e74c3c; } 
         .close-btn { background-color: #7f8c8d; } 
         
         .export-section {
@@ -184,13 +257,6 @@
         .download-btn { background-color: #2980b9; color: white; flex: 1; padding: 10px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
         .copy-btn { background-color: #8e44ad; color: white; flex: 1; padding: 10px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
 
-        /* تنسيقات زرار الاكتشاف الجديد اللي ضفناها */
-        .tools-container {
-            display: flex;
-            justify-content: center;
-            padding: 5px 0;
-        }
-
         .auto-fetch-btn {
             background-color: #e67e22; 
             color: white;
@@ -204,22 +270,58 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.5); 
         }
 
-        .auto-fetch-btn:hover {
-            background-color: #d35400; 
+        .auto-fetch-btn:hover { background-color: #d35400; }
+
+        /* --- تصميم شريط تحديد القنوات السفلي --- */
+        .selection-bar {
+            position: fixed;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #1a1a1a;
+            border: 2px solid #f39c12;
+            border-radius: 10px;
+            padding: 10px 15px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            transition: bottom 0.3s ease-in-out;
+            box-shadow: 0 -5px 15px rgba(0,0,0,0.8);
+            flex-wrap: wrap;
+            min-width: 60%;
         }
 
-        .auto-fetch-btn:disabled {
-            background-color: #7f8c8d;
-            cursor: not-allowed;
-            box-shadow: none;
+        .selection-bar.active {
+            bottom: 20px;
         }
+
+        .selection-bar span { font-weight: bold; font-size: 15px; margin-left: 10px; color: white; }
+        
+        .select-all-label { 
+            cursor: pointer; display: flex; align-items: center; gap: 5px; 
+            background: #8e44ad; padding: 6px 12px; border-radius: 5px; font-weight: bold; 
+        }
+        
+        .s-btn { padding: 6px 12px; font-weight: bold; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        .s-dup-btn { background-color: #f1c40f; color: black; }
+        .s-link-btn { background-color: #2980b9; }
+        .s-code-btn { background-color: #2ecc71; }
+        .s-del-btn { background-color: #e74c3c; }
+        .s-close-btn { background-color: #c0392b; border: 1px solid #ff7675; }
+
     </style>
 <style>:is([id*='google_ads_iframe'],[id*='taboola-'],.taboolaHeight,.taboola-placeholder,#top-ad,#credential_picker_container,#credentials-picker-container,#credential_picker_iframe,[id*='google-one-tap-iframe'],#google-one-tap-popup-container,.google-one-tap__module,.google-one-tap-modal-div,#amp_floatingAdDiv,#ez-content-blocker-container) {display:none!important;min-height:0!important;height:0!important;}</style></head>
 <body>
 
     <div class="player-header">
         <div class="top-controls">
-            <button class="admin-btn" onclick="openModal()">⚙️ التعديل</button>
+            <div style="display: flex; gap: 5px; flex-wrap: wrap;">
+                <button class="admin-btn" onclick="openModal()">⚙️ التعديل</button>
+                <button class="admin-btn" style="background-color: #2c3e50; color: white;" onclick="openBulkEditModal()">📝 تعديل الكود</button>
+                <button id="selectModeBtn" class="admin-btn" style="background-color: rgb(142, 68, 173); color: white;" onclick="toggleSelectionMode()">☑️ تحديد القنوات</button>
+            </div>
             
             <div class="nav-buttons">
                 <button id="closeVid" class="close-top-btn" onclick="closePlayer()" style="display: none;">إغلاق ✖</button>
@@ -234,7 +336,7 @@
             <button id="adblockBtn" class="adblock-btn" onclick="toggleAdBlock()">🛡️ المانع (شغال)</button>
         </div>
 
-        <div class="tabs-container" id="mainTabs"><button class="auto-fetch-btn" id="autoFetchBtn" onclick="playRandomSportsChannel()">
+        <div class="tabs-container" id="mainTabs"><div class="tabs-container" id="mainTabs"><button class="auto-fetch-btn" id="autoFetchBtn" onclick="playRandomSportsChannel()">
                 ⚽ اكتشاف قناة رياضية من النت
             </button>  <button id="btn_new_1775762820640_0" class="tab-btn" data-link="https://dabac.link/ch?id=1" onclick="playStream(this)">قناة 1</button><button id="btn_new_1775762820640_1" class="tab-btn" data-link="https://dabac.link/ch?id=2" onclick="playStream(this)">قناة 2</button><button id="btn_new_1775762820640_2" class="tab-btn" data-link="https://dabac.link/ch?id=3" onclick="playStream(this)">قناة 3</button><button id="btn_new_1775762820640_3" class="tab-btn" data-link="https://dabac.link/ch?id=4" onclick="playStream(this)">قناة 4</button><button id="btn_new_1775762820640_4" class="tab-btn" data-link="https://dabac.link/ch?id=5" onclick="playStream(this)">قناة 5</button><button id="btn_new_1775762820640_5" class="tab-btn" data-link="https://dabac.link/ch?id=6" onclick="playStream(this)">قناة 6</button><button id="btn_new_1775762820640_6" class="tab-btn" data-link="https://dabac.link/ch?id=7" onclick="playStream(this)">قناة 7</button><button id="btn_new_1775762820640_7" class="tab-btn" data-link="https://dabac.link/ch?id=8" onclick="playStream(this)">قناة 8</button><button id="btn_new_1775762820640_8" class="tab-btn" data-link="https://dabac.link/ch?id=9" onclick="playStream(this)">قناة 9</button><button id="btn_new_1775762820640_9" class="tab-btn" data-link="https://dabac.link/ch?id=10" onclick="playStream(this)">قناة 10</button><button id="btn_new_1775762820640_10" class="tab-btn" data-link="https://dabac.link/ch?id=11" onclick="playStream(this)">قناة 11</button><button id="btn_new_1775762820640_11" class="tab-btn" data-link="https://dabac.link/ch?id=12" onclick="playStream(this)">قناة 12</button><button id="btn_new_1775762820640_12" class="tab-btn" data-link="https://dabac.link/ch?id=13" onclick="playStream(this)">قناة 13</button><button id="btn_new_1775762820640_13" class="tab-btn" data-link="https://dabac.link/ch?id=14" onclick="playStream(this)">قناة 14</button><button id="btn_new_1775762820640_14" class="tab-btn" data-link="https://dabac.link/ch?id=15" onclick="playStream(this)">قناة 15</button><button id="btn_new_1775762820640_15" class="tab-btn" data-link="https://dabac.link/ch?id=16" onclick="playStream(this)">قناة 16</button><button id="btn_new_1775762820640_16" class="tab-btn" data-link="https://dabac.link/ch?id=17" onclick="playStream(this)">قناة 17</button><button id="btn_new_1775762820640_17" class="tab-btn" data-link="https://dabac.link/ch?id=18" onclick="playStream(this)">قناة 18</button><button id="btn_new_1775762820640_18" class="tab-btn" data-link="https://dabac.link/ch?id=19" onclick="playStream(this)">قناة 19</button><button id="btn_new_1775762820640_19" class="tab-btn" data-link="https://dabac.link/ch?id=20" onclick="playStream(this)">قناة 20</button><button id="btn_new_1775762820640_20" class="tab-btn" data-link="https://dabac.link/ch?id=21" onclick="playStream(this)">قناة 21</button><button id="btn_new_1775762820640_21" class="tab-btn" data-link="https://dabac.link/ch?id=22" onclick="playStream(this)">قناة 22</button><button id="btn_new_1775762820640_22" class="tab-btn" data-link="https://dabac.link/ch?id=23" onclick="playStream(this)">قناة 23</button><button id="btn_new_1775762820640_23" class="tab-btn" data-link="https://dabac.link/ch?id=24" onclick="playStream(this)">قناة 24</button><button id="btn_new_1775762820640_24" class="tab-btn" data-link="https://dabac.link/ch?id=25" onclick="playStream(this)">قناة 25</button><button id="btn_new_1775762820640_25" class="tab-btn" data-link="https://dabac.link/ch?id=26" onclick="playStream(this)">قناة 26</button><button id="btn_new_1775762820640_26" class="tab-btn" data-link="https://dabac.link/ch?id=27" onclick="playStream(this)">قناة 27</button><button id="btn_new_1775762820640_27" class="tab-btn" data-link="https://dabac.link/ch?id=28" onclick="playStream(this)">قناة 28</button><button id="btn_new_1775762820640_28" class="tab-btn" data-link="https://dabac.link/ch?id=29" onclick="playStream(this)">قناة 29</button><button id="btn_new_1775762820640_29" class="tab-btn" data-link="https://dabac.link/ch?id=30" onclick="playStream(this)">قناة 30</button><button id="btn_new_1775762820640_30" class="tab-btn" data-link="https://dabac.link/ch?id=31" onclick="playStream(this)">قناة 31</button><button id="btn_new_1775762820640_31" class="tab-btn" data-link="https://dabac.link/ch?id=32" onclick="playStream(this)">قناة 32</button><button id="btn_new_1775762820640_32" class="tab-btn" data-link="https://dabac.link/ch?id=33" onclick="playStream(this)">قناة 33</button><button id="btn_new_1775762820640_33" class="tab-btn" data-link="https://dabac.link/ch?id=34" onclick="playStream(this)">قناة 34</button><button id="btn_new_1775762820640_34" class="tab-btn" data-link="https://dabac.link/ch?id=35" onclick="playStream(this)">قناة 35</button><button id="btn_new_1775762820640_35" class="tab-btn" data-link="https://dabac.link/ch?id=36" onclick="playStream(this)">قناة 36</button><button id="btn_new_1775762820640_36" class="tab-btn" data-link="https://dabac.link/ch?id=37" onclick="playStream(this)">قناة 37</button><button id="btn_new_1775762820640_37" class="tab-btn" data-link="https://dabac.link/ch?id=38" onclick="playStream(this)">قناة 38</button><button id="btn_new_1775762820640_38" class="tab-btn" data-link="https://dabac.link/ch?id=39" onclick="playStream(this)">قناة 39</button><button id="btn_new_1775762820640_39" class="tab-btn" data-link="https://dabac.link/ch?id=40" onclick="playStream(this)">قناة 40</button><button id="btn_new_1775762820640_40" class="tab-btn" data-link="https://dabac.link/ch?id=41" onclick="playStream(this)">قناة 41</button><button id="btn_new_1775762820640_41" class="tab-btn" data-link="https://dabac.link/ch?id=42" onclick="playStream(this)">قناة 42</button><button id="btn_new_1775762820640_42" class="tab-btn" data-link="https://dabac.link/ch?id=43" onclick="playStream(this)">قناة 43</button><button id="btn_new_1775762820640_43" class="tab-btn" data-link="https://dabac.link/ch?id=44" onclick="playStream(this)">قناة 44</button><button id="btn_new_1775762820640_44" class="tab-btn" data-link="https://dabac.link/ch?id=45" onclick="playStream(this)">قناة 45</button><button id="btn_new_1775762820640_45" class="tab-btn" data-link="https://dabac.link/ch?id=46" onclick="playStream(this)">قناة 46</button><button id="btn_new_1775762820640_46" class="tab-btn" data-link="https://dabac.link/ch?id=47" onclick="playStream(this)">قناة 47</button><button id="btn_new_1775762820640_47" class="tab-btn" data-link="https://dabac.link/ch?id=48" onclick="playStream(this)">قناة 48</button><button id="btn_new_1775762820640_48" class="tab-btn" data-link="https://dabac.link/ch?id=49" onclick="playStream(this)">قناة 49</button><button id="btn_new_1775762820640_49" class="tab-btn" data-link="https://dabac.link/ch?id=50" onclick="playStream(this)">قناة 50</button><button id="btn_new_1775762820640_50" class="tab-btn" data-link="https://dabac.link/ch?id=51" onclick="playStream(this)">قناة 51</button><button id="btn_new_1775762820640_51" class="tab-btn" data-link="https://dabac.link/ch?id=52" onclick="playStream(this)">قناة 52</button><button id="btn_new_1775762820640_52" class="tab-btn" data-link="https://dabac.link/ch?id=53" onclick="playStream(this)">قناة 53</button><button id="btn_new_1775762820640_53" class="tab-btn" data-link="https://dabac.link/ch?id=54" onclick="playStream(this)">قناة 54</button><button id="btn_new_1775762820640_54" class="tab-btn" data-link="https://dabac.link/ch?id=55" onclick="playStream(this)">قناة 55</button><button id="btn_new_1775762820640_55" class="tab-btn" data-link="https://dabac.link/ch?id=56" onclick="playStream(this)">قناة 56</button><button id="btn_new_1775762820640_56" class="tab-btn" data-link="https://dabac.link/ch?id=57" onclick="playStream(this)">قناة 57</button><button id="btn_new_1775762820640_57" class="tab-btn" data-link="https://dabac.link/ch?id=58" onclick="playStream(this)">قناة 58</button><button id="btn_new_1775762820640_58" class="tab-btn" data-link="https://dabac.link/ch?id=59" onclick="playStream(this)">قناة 59</button><button id="btn_new_1775762820640_59" class="tab-btn" data-link="https://dabac.link/ch?id=60" onclick="playStream(this)">قناة 60</button><button id="btn_new_1775762820640_60" class="tab-btn" data-link="https://dabac.link/ch?id=61" onclick="playStream(this)">قناة 61</button><button id="btn_new_1775762820640_61" class="tab-btn" data-link="https://dabac.link/ch?id=62" onclick="playStream(this)">قناة 62</button><button id="btn_new_1775762820640_62" class="tab-btn" data-link="https://dabac.link/ch?id=63" onclick="playStream(this)">قناة 63</button><button id="btn_new_1775762820640_63" class="tab-btn" data-link="https://dabac.link/ch?id=64" onclick="playStream(this)">قناة 64</button><button id="btn_new_1775762820640_64" class="tab-btn" data-link="https://dabac.link/ch?id=65" onclick="playStream(this)">قناة 65</button><button id="btn_new_1775762820640_65" class="tab-btn" data-link="https://dabac.link/ch?id=66" onclick="playStream(this)">قناة 66</button><button id="btn_new_1775762820640_66" class="tab-btn" data-link="https://dabac.link/ch?id=67" onclick="playStream(this)">قناة 67</button><button id="btn_new_1775762820640_67" class="tab-btn" data-link="https://dabac.link/ch?id=68" onclick="playStream(this)">قناة 68</button><button id="btn_new_1775762820640_68" class="tab-btn" data-link="https://dabac.link/ch?id=69" onclick="playStream(this)">قناة 69</button><button id="btn_new_1775762820640_69" class="tab-btn" data-link="https://dabac.link/ch?id=70" onclick="playStream(this)">قناة 70</button><button id="btn_new_1775762820640_70" class="tab-btn" data-link="https://dabac.link/ch?id=71" onclick="playStream(this)">قناة 71</button><button id="btn_new_1775762820640_71" class="tab-btn" data-link="https://dabac.link/ch?id=72" onclick="playStream(this)">قناة 72</button><button id="btn_new_1775762820640_72" class="tab-btn" data-link="https://dabac.link/ch?id=73" onclick="playStream(this)">قناة 73</button><button id="btn_new_1775762820640_73" class="tab-btn" data-link="https://dabac.link/ch?id=74" onclick="playStream(this)">قناة 74</button><button id="btn_new_1775762820640_74" class="tab-btn" data-link="https://dabac.link/ch?id=75" onclick="playStream(this)">قناة 75</button><button id="btn_new_1775762820640_75" class="tab-btn" data-link="https://dabac.link/ch?id=76" onclick="playStream(this)">قناة 76</button><button id="btn_new_1775762820640_76" class="tab-btn" data-link="https://dabac.link/ch?id=77" onclick="playStream(this)">قناة 77</button><button id="btn_new_1775762820640_77" class="tab-btn" data-link="https://dabac.link/ch?id=78" onclick="playStream(this)">قناة 78</button><button id="btn_new_1775762820640_78" class="tab-btn" data-link="https://dabac.link/ch?id=79" onclick="playStream(this)">قناة 79</button><button id="btn_new_1775762820640_79" class="tab-btn" data-link="https://dabac.link/ch?id=80" onclick="playStream(this)">قناة 80</button><button id="btn_new_1775762820640_80" class="tab-btn" data-link="https://dabac.link/ch?id=81" onclick="playStream(this)">قناة 81</button><button id="btn_new_1775762820640_81" class="tab-btn" data-link="https://dabac.link/ch?id=82" onclick="playStream(this)">قناة 82</button><button id="btn_new_1775762820640_82" class="tab-btn" data-link="https://dabac.link/ch?id=83" onclick="playStream(this)">قناة 83</button><button id="btn_new_1775762820640_83" class="tab-btn" data-link="https://dabac.link/ch?id=84" onclick="playStream(this)">قناة 84</button><button id="btn_new_1775762820640_84" class="tab-btn" data-link="https://dabac.link/ch?id=85" onclick="playStream(this)">قناة 85</button><button id="btn_new_1775762820640_85" class="tab-btn" data-link="https://dabac.link/ch?id=86" onclick="playStream(this)">قناة 86</button><button id="btn_new_1775762820640_86" class="tab-btn" data-link="https://dabac.link/ch?id=87" onclick="playStream(this)">قناة 87</button><button id="btn_new_1775762820640_87" class="tab-btn" data-link="https://dabac.link/ch?id=88" onclick="playStream(this)">قناة 88</button><button id="btn_new_1775762820640_88" class="tab-btn" data-link="https://dabac.link/ch?id=89" onclick="playStream(this)">قناة 89</button><button id="btn_new_1775762820640_89" class="tab-btn" data-link="https://dabac.link/ch?id=90" onclick="playStream(this)">قناة 90</button><button id="btn_new_1775762820640_90" class="tab-btn" data-link="https://dabac.link/ch?id=91" onclick="playStream(this)">قناة 91</button><button id="btn_new_1775762820640_91" class="tab-btn" data-link="https://dabac.link/ch?id=92" onclick="playStream(this)">قناة 92</button><button id="btn_new_1775762820640_92" class="tab-btn" data-link="https://dabac.link/ch?id=93" onclick="playStream(this)">قناة 93</button><button id="btn_new_1775762820640_93" class="tab-btn" data-link="https://dabac.link/ch?id=94" onclick="playStream(this)">قناة 94</button><button id="btn_new_1775762820640_94" class="tab-btn" data-link="https://dabac.link/ch?id=95" onclick="playStream(this)">قناة 95</button><button id="btn_new_1775762820640_95" class="tab-btn" data-link="https://dabac.link/ch?id=96" onclick="playStream(this)">قناة 96</button><button id="btn_new_1775762820640_96" class="tab-btn" data-link="https://dabac.link/ch?id=97" onclick="playStream(this)">قناة 97</button><button id="btn_new_1775762820640_97" class="tab-btn" data-link="https://dabac.link/ch?id=98" onclick="playStream(this)">قناة 98</button><button id="btn_new_1775762820640_98" class="tab-btn" data-link="https://dabac.link/ch?id=99" onclick="playStream(this)">قناة 99</button><button id="btn_new_1775762820640_99" class="tab-btn" data-link="https://dabac.link/ch?id=100" onclick="playStream(this)">قناة 100</button><button id="btn1" class="tab-btn" data-link="https://vuen.link/ch?id=1" onclick="playStream(this)" data-category="general">1</button>
 <button id="btn2" class="tab-btn" data-link="https://vuen.link/ch?id=2" onclick="playStream(this)">2</button>
@@ -446,11 +548,37 @@
 <button id="btn99" class="tab-btn" data-link="https://vuen.link/ch?id=99" onclick="playStream(this)">99</button>
 <button id="btn100" class="tab-btn" data-link="https://vuen.link/ch?id=100" onclick="playStream(this)">100</button>
 
-            <button id="btn_auto_1775515888131" class="tab-btn" data-link="https://tv19.koora-plus.top/chtv/ch1.php" onclick="playStream(this)">⭐ Koora Plus 1</button><button id="btn_auto_1775515893032" class="tab-btn" data-link="https://tv19.koora-plus.top/chtv/ch1.php" onclick="playStream(this)">⭐ Koora Plus 1</button><button id="btn_auto_1775515896035" class="tab-btn" data-link="https://tv19.koora-plus.top/chtv/ch1.php" onclick="playStream(this)">⭐ Koora Plus 1</button><button id="btn_auto_1775515900177" class="tab-btn" data-link="https://live.aflam4you.net/zremb472.php?vid=5407&amp;aflam_s=1&amp;aflam_w=360&amp;aflam_h=250&amp;aflam_k=11623324" onclick="playStream(this)">⭐ Aflam4You Sport</button><button id="btn_auto_1775515903323" class="tab-btn" data-link="https://tv19.koora-plus.top/chtv/ch2.php" onclick="playStream(this)">⭐ Koora Plus 2</button><button id="btn_auto_1775515906974" class="tab-btn" data-link="https://live.aflam4you.net/zremb472.php?vid=5407&amp;aflam_s=1&amp;aflam_w=360&amp;aflam_h=250&amp;aflam_k=11623324" onclick="playStream(this)">⭐ Aflam4You Sport</button></div>
+            <button id="btn_auto_1775515888131" class="tab-btn" data-link="https://tv19.koora-plus.top/chtv/ch1.php" onclick="playStream(this)">⭐ Koora Plus 1</button><button id="btn_auto_1775515893032" class="tab-btn" data-link="https://tv19.koora-plus.top/chtv/ch1.php" onclick="playStream(this)">⭐ Koora Plus 1</button><button id="btn_auto_1775515896035" class="tab-btn" data-link="https://tv19.koora-plus.top/chtv/ch1.php" onclick="playStream(this)">⭐ Koora Plus 1</button><button id="btn_auto_1775515900177" class="tab-btn" data-link="https://live.aflam4you.net/zremb472.php?vid=5407&amp;aflam_s=1&amp;aflam_w=360&amp;aflam_h=250&amp;aflam_k=11623324" onclick="playStream(this)">⭐ Aflam4You Sport</button><button id="btn_auto_1775515903323" class="tab-btn" data-link="https://tv19.koora-plus.top/chtv/ch2.php" onclick="playStream(this)">⭐ Koora Plus 2</button><button id="btn_auto_1775515906974" class="tab-btn" data-link="https://live.aflam4you.net/zremb472.php?vid=5407&amp;aflam_s=1&amp;aflam_w=360&amp;aflam_h=250&amp;aflam_k=11623324" onclick="playStream(this)">⭐ Aflam4You Sport</button></div></div>
     </div>
 
     <div class="video-wrapper">
         <iframe id="videoPlayer" src="" allowfullscreen="" sandbox="allow-scripts allow-same-origin"></iframe>
+    </div>
+
+    <div id="selectionBar" class="selection-bar">
+        <span id="selectionCount">تم تحديد 0 قناة</span>
+        <label class="select-all-label">
+            <input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll()"> تحديد الكل
+        </label>
+        <button class="s-btn s-dup-btn" onclick="duplicateSelected()">تكرار 📑</button>
+        <button class="s-btn s-link-btn" onclick="copySelectedLinks()">روابط 🔗</button>
+        <button class="s-btn s-code-btn" onclick="copySelectedCodes()">أكواد 📄</button>
+        <button class="s-btn s-del-btn" onclick="deleteSelected()">حذف 🗑️</button>
+        <button class="s-btn s-close-btn" onclick="toggleSelectionMode()">إغلاق ❌</button>
+    </div>
+
+    <div id="bulkEditModal" class="modal" style="display: none;">
+        <div class="bulk-modal-content">
+            <h2 style="margin-top: 0;">📝 تعديل كود القنوات بالكامل</h2>
+            <p style="color: #bdc3c7; font-size: 14px; margin-bottom: 15px;">(تقدر تنسخ وتلصق أكواد زراير القنوات القديمة أو الجديدة هنا مباشرة)</p>
+            
+            <textarea id="bulkCodeTextarea" class="bulk-textarea" spellcheck="false"></textarea>
+            
+            <div class="bulk-btn-group">
+                <button class="bulk-cancel-btn" onclick="closeBulkEditModal()">إلغاء ❌</button>
+                <button class="bulk-save-btn" onclick="saveBulkEdit()">حفظ وبناء القنوات ✅</button>
+            </div>
+        </div>
     </div>
 
     <div id="settingsModal" class="modal" style="display: none;">
@@ -472,9 +600,17 @@
                 <input type="text" id="editLink" data-ddg-inputtype="unknown">
             </div>
 
+            <div class="form-group">
+                <label>طريقة الفتح:</label>
+                <select id="editOpenTarget" data-ddg-inputtype="unknown">
+                    <option value="internal">داخلي (داخل المشغل)</option>
+                    <option value="external">خارجي (في نافذة جديدة)</option>
+                </select>
+            </div>
+
             <div class="modal-buttons">
                 <button class="action-btn save-btn" onclick="applyChanges()">تطبيق التعديل</button>
-                <button class="action-btn delete-btn" onclick="deleteChannel()">حذف القناة</button>
+                <button class="action-btn delete-btn-modal" onclick="deleteChannel()">حذف القناة</button>
                 <button class="action-btn close-btn" onclick="closeModal()">إغلاق</button>
             </div>
 
@@ -487,10 +623,165 @@
     </div>
 
     <script>
+        // --- متغيرات ونظام التحديد ---
+        let isSelectionMode = false;
+        let autoSkipTimer = null; // المضاف حديثاً للانتقال التلقائي
+
+        function toggleSelectionMode() {
+            isSelectionMode = !isSelectionMode;
+            let bar = document.getElementById('selectionBar');
+            let selectBtn = document.getElementById('selectModeBtn');
+
+            if (isSelectionMode) {
+                bar.classList.add('active');
+                selectBtn.style.backgroundColor = '#e74c3c';
+                selectBtn.innerText = 'إلغاء وضع التحديد';
+            } else {
+                bar.classList.remove('active');
+                selectBtn.style.backgroundColor = '#8e44ad';
+                selectBtn.innerText = '☑️ تحديد القنوات';
+                
+                document.querySelectorAll('.tab-btn.selected-channel').forEach(b => b.classList.remove('selected-channel'));
+                document.getElementById('selectAllCheckbox').checked = false;
+                updateSelectionCount();
+            }
+        }
+
+        function updateSelectionCount() {
+            let count = document.querySelectorAll('#mainTabs .tab-btn.selected-channel').length;
+            document.getElementById('selectionCount').innerText = `تم تحديد ${count} قناة`;
+        }
+
+        function toggleSelectAll() {
+            let isChecked = document.getElementById('selectAllCheckbox').checked;
+            let buttons = document.querySelectorAll('#mainTabs .tab-btn:not(#autoFetchBtn)'); 
+            
+            buttons.forEach(btn => {
+                if (isChecked) {
+                    btn.classList.add('selected-channel');
+                } else {
+                    btn.classList.remove('selected-channel');
+                }
+            });
+            updateSelectionCount();
+        }
+
+        function deleteSelected() {
+            let selected = document.querySelectorAll('#mainTabs .tab-btn.selected-channel');
+            if (selected.length === 0) { alert("يا باشا حدد قنوات الأول عشان تحذفها!"); return; }
+            
+            if(confirm(`متأكد إنك عايز تحذف ${selected.length} قناة؟`)) {
+                selected.forEach(btn => {
+                    if (btn.classList.contains('active')) closePlayer();
+                    btn.remove();
+                });
+                populateSelectMenu();
+                updateSelectionCount();
+                document.getElementById('selectAllCheckbox').checked = false;
+            }
+        }
+
+        function copySelectedLinks() {
+            let selected = document.querySelectorAll('#mainTabs .tab-btn.selected-channel');
+            if (selected.length === 0) { alert("حدد قنوات الأول!"); return; }
+            let links = Array.from(selected).map(btn => btn.getAttribute('data-link')).join('\n');
+            triggerCopy(links, "تم نسخ الروابط المحددة بنجاح! 🔗");
+        }
+
+        function copySelectedCodes() {
+            let selected = document.querySelectorAll('#mainTabs .tab-btn.selected-channel');
+            if (selected.length === 0) { alert("حدد قنوات الأول!"); return; }
+            let codes = Array.from(selected).map(btn => {
+                let clone = btn.cloneNode(true);
+                clone.classList.remove('selected-channel'); 
+                return clone.outerHTML;
+            }).join('\n');
+            triggerCopy(codes, "تم نسخ أكواد القنوات المحددة بنجاح! 📄");
+        }
+
+        function duplicateSelected() {
+            let selected = document.querySelectorAll('#mainTabs .tab-btn.selected-channel');
+            if (selected.length === 0) { alert("حدد قنوات الأول عشان تكررها!"); return; }
+            
+            let container = document.getElementById('mainTabs');
+            let timestamp = new Date().getTime();
+            
+            selected.forEach((btn, index) => {
+                let clone = btn.cloneNode(true);
+                clone.id = "btn_dup_" + timestamp + "_" + index;
+                clone.classList.remove('selected-channel'); 
+                clone.classList.remove('active');
+                container.appendChild(clone);
+            });
+            populateSelectMenu();
+            alert(`تم تكرار ${selected.length} قناة بنجاح! 📑`);
+        }
+
+        // --- نظام تعديل الكود بالكامل ---
+        function openBulkEditModal() {
+            let textarea = document.getElementById('bulkCodeTextarea');
+            let channelsHTML = '';
+            
+            document.querySelectorAll('#mainTabs .tab-btn:not(#autoFetchBtn)').forEach(btn => {
+                let clone = btn.cloneNode(true);
+                clone.classList.remove('selected-channel', 'active');
+                channelsHTML += clone.outerHTML + '\n';
+            });
+            
+            textarea.value = channelsHTML;
+            document.getElementById('bulkEditModal').style.display = 'flex';
+        }
+
+        function closeBulkEditModal() {
+            document.getElementById('bulkEditModal').style.display = 'none';
+        }
+
+        function saveBulkEdit() {
+            let newHTML = document.getElementById('bulkCodeTextarea').value;
+            let mainTabs = document.getElementById('mainTabs');
+            let autoFetchBtn = document.getElementById('autoFetchBtn');
+            
+            mainTabs.innerHTML = '';
+            
+            if (autoFetchBtn) {
+                mainTabs.appendChild(autoFetchBtn);
+            }
+            
+            mainTabs.insertAdjacentHTML('beforeend', newHTML);
+            
+            closeBulkEditModal();
+            populateSelectMenu();
+            updateSelectionCount();
+            
+            if(!document.querySelector('#mainTabs .tab-btn.active')) {
+                closePlayer();
+            }
+            
+            alert("تم بناء القنوات بنجاح! ✅");
+        }
+
+
+        // دالة مساعدة للنسخ
+        function triggerCopy(text, successMsg) {
+            let textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            textArea.style.left = "-9999px";
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                alert(successMsg);
+            } catch (err) {
+                alert("عذراً، المتصفح رفض النسخ.");
+            }
+            document.body.removeChild(textArea);
+        }
+
         function populateSelectMenu() {
             const selectMenu = document.getElementById('buttonSelect');
             selectMenu.innerHTML = ''; 
-            document.querySelectorAll('#mainTabs .tab-btn').forEach(btn => {
+            document.querySelectorAll('#mainTabs .tab-btn:not(#autoFetchBtn)').forEach(btn => {
                 let opt = document.createElement('option');
                 opt.value = btn.id;
                 opt.innerText = btn.innerText;
@@ -500,7 +791,7 @@
         populateSelectMenu();
 
         window.onload = function() {
-            let firstBtn = document.querySelector('#mainTabs .tab-btn');
+            let firstBtn = document.querySelector('#mainTabs .tab-btn:not(#autoFetchBtn)');
             if(firstBtn) playStream(firstBtn);
             populateSelectMenu();
         };
@@ -525,9 +816,51 @@
             if(currentSrc && currentSrc !== window.location.href) iframe.src = currentSrc;
         }
 
+        // --- دالة التشغيل المُحدثة (بالفحص الذكي للسيرفرات الميتة) ---
         function playStream(btnElement) {
+            if (isSelectionMode && btnElement.id !== 'autoFetchBtn') {
+                btnElement.classList.toggle('selected-channel');
+                updateSelectionCount();
+                return; 
+            }
+
             let link = btnElement.getAttribute('data-link');
-            document.getElementById('videoPlayer').src = link;
+            let target = btnElement.getAttribute('data-open') || 'internal'; 
+
+            if(!link) return;
+
+            if (target === 'external') {
+                window.open(link, '_blank');
+                return; 
+            }
+
+            let iframe = document.getElementById('videoPlayer');
+            
+            // 1. تصفير العدادات القديمة
+            if (autoSkipTimer) clearTimeout(autoSkipTimer);
+            iframe.onload = null;
+            iframe.onerror = null;
+
+            // 2. العداد العادي: لو السيرفر موجود بس تقيل جداً وماردش في 8 ثواني
+            autoSkipTimer = setTimeout(() => {
+                console.log("تخطي: السيرفر خد وقت طويل جداً");
+                nextStream(); 
+            }, 8000); 
+
+            // 3. لو المتصفح حمل حاجة (سواء بث أو صفحة خطأ داخلية)، بنوقف العداد العادي مؤقتاً
+            iframe.onload = function() {
+                clearTimeout(autoSkipTimer);
+            };
+
+            // 4. الحل السحري: فحص نبض السيرفر في الخلفية
+            // ده بيكتشف لو السيرفر واقع تماماً زي حالة (Server Not Found) وبينقل فوراً
+            fetch(link, { mode: 'no-cors' }).catch(() => {
+                console.log("تخطي فوراً: السيرفر غير موجود أو واقع نهائياً!");
+                clearTimeout(autoSkipTimer);
+                nextStream();
+            });
+
+            iframe.src = link;
             document.getElementById('closeVid').style.display = 'inline-block';
             document.getElementById('externalVid').style.display = 'inline-block';
             document.getElementById('copyLinkBtn').style.display = 'inline-block';
@@ -555,13 +888,7 @@
         function copyCurrentLink() {
             let currentLink = document.getElementById('videoPlayer').src;
             if (currentLink && currentLink.trim() !== "" && currentLink !== window.location.href) {
-                let textArea = document.createElement("textarea");
-                textArea.value = currentLink;
-                document.body.appendChild(textArea);
-                textArea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textArea);
-                alert("تم نسخ رابط القناة بنجاح!");
+                triggerCopy(currentLink, "تم نسخ رابط القناة بنجاح!");
             }
         }
 
@@ -577,10 +904,12 @@
 
         function loadButtonData() {
             let id = document.getElementById('buttonSelect').value;
+            if(!id) return;
             let btn = document.getElementById(id);
             if(btn) {
                 document.getElementById('editName').value = btn.innerText;
                 document.getElementById('editLink').value = btn.getAttribute('data-link');
+                document.getElementById('editOpenTarget').value = btn.getAttribute('data-open') || 'internal';
             }
         }
 
@@ -588,10 +917,21 @@
             let id = document.getElementById('buttonSelect').value;
             let btn = document.getElementById(id);
             if(!btn) return;
+            
             btn.innerText = document.getElementById('editName').value;
             btn.setAttribute('data-link', document.getElementById('editLink').value);
+            // حفظ نوع الفتح في الزرار
+            btn.setAttribute('data-open', document.getElementById('editOpenTarget').value);
+            
             populateSelectMenu();
-            if (btn.classList.contains('active')) playStream(btn);
+            
+            if (btn.classList.contains('active') && !isSelectionMode) {
+                if (document.getElementById('editOpenTarget').value === 'external') {
+                    closePlayer();
+                } else {
+                    playStream(btn);
+                }
+            }
             alert("تم التعديل!");
         }
 
@@ -607,16 +947,18 @@
         }
 
         function addNewChannel() {
-            let inputLinks = prompt("حط اللينكات هنا:");
+            let inputLinks = prompt("حط اللينكات هنا (كل لينك في سطر أو بينهم مسافة):");
             if (!inputLinks) return;
             let linksArray = inputLinks.split(/[\s,\n]+/).filter(l => l.trim() !== "");
-            let baseName = prompt("الاسم الأساسي:", "قناة");
+            let baseName = prompt("الاسم الأساسي للقنوات:", "قناة جديدة");
             let timestamp = new Date().getTime();
+            
             linksArray.forEach((link, index) => {
                 let newBtn = document.createElement("button");
                 newBtn.id = "btn_new_" + timestamp + "_" + index;
                 newBtn.className = "tab-btn";
                 newBtn.setAttribute("data-link", link);
+                newBtn.setAttribute("data-open", "internal"); // افتراضي داخلي
                 newBtn.innerText = linksArray.length > 1 ? `${baseName} ${index + 1}` : baseName;
                 newBtn.setAttribute("onclick", "playStream(this)");
                 document.getElementById("mainTabs").appendChild(newBtn);
@@ -634,31 +976,15 @@
             a.click();
         }
 
-        // --- الدالة المعدلة اللي كانت بايظة عندك ---
         function copyFullCode() {
             closeModal();
             let content = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-            
-            // إنشاء عنصر نصي وهمي للنسخ لضمان العمل على كل المتصفحات والأنظمة
-            let textArea = document.createElement("textarea");
-            textArea.value = content;
-            textArea.style.position = "fixed";
-            textArea.style.left = "-9999px";
-            textArea.style.top = "0";
-            document.body.appendChild(textArea);
-            textArea.select();
-            
-            try {
-                let successful = document.execCommand('copy');
-                if(successful) alert("تم نسخ الكود بالكامل بنجاح! ✅");
-            } catch (err) {
-                alert("عذراً، المتصفح رفض النسخ التلقائي.");
-            }
-            document.body.removeChild(textArea);
+            triggerCopy(content, "تم نسخ الكود بالكامل بنجاح! ✅");
         }
 
         function nextStream() {
-            let tabs = Array.from(document.querySelectorAll('#mainTabs .tab-btn'));
+            let tabs = Array.from(document.querySelectorAll('#mainTabs .tab-btn:not(#autoFetchBtn)'));
+            if(tabs.length === 0) return;
             let activeIndex = tabs.findIndex(btn => btn.classList.contains('active'));
             let nextIndex = (activeIndex + 1) % tabs.length; 
             playStream(tabs[nextIndex]);
@@ -666,7 +992,8 @@
         }
 
         function prevStream() {
-            let tabs = Array.from(document.querySelectorAll('#mainTabs .tab-btn'));
+            let tabs = Array.from(document.querySelectorAll('#mainTabs .tab-btn:not(#autoFetchBtn)'));
+            if(tabs.length === 0) return;
             let activeIndex = tabs.findIndex(btn => btn.classList.contains('active'));
             let prevIndex = (activeIndex - 1 + tabs.length) % tabs.length; 
             playStream(tabs[prevIndex]);
@@ -685,29 +1012,38 @@
                 { name: "Koora Plus 3", url: "https://tv19.koora-plus.top/chtv/ch3.php" },
                 { name: "Koora Plus 4", url: "https://tv19.koora-plus.top/chtv/ch4.php" }
             ];
+            
             let existingLinks = Array.from(document.querySelectorAll('#mainTabs .tab-btn')).map(btn => btn.getAttribute('data-link'));
             let availableChannels = sportsChannels.filter(channel => !existingLinks.includes(channel.url));
+            
             if (availableChannels.length === 0) {
-                alert("كل القنوات المتاحة اتضافت قبل كده!");
+                alert("كل القنوات المتاحة في السكربت اتضافت قبل كده!");
                 return;
             }
+            
             const btn = document.getElementById('autoFetchBtn');
             btn.innerHTML = "⏳ جاري البحث...";
+            
             setTimeout(() => {
                 const randomChannel = availableChannels[Math.floor(Math.random() * availableChannels.length)];
                 let newBtn = document.createElement("button");
                 newBtn.id = "btn_auto_" + new Date().getTime();
                 newBtn.className = "tab-btn";
                 newBtn.setAttribute("data-link", randomChannel.url);
+                newBtn.setAttribute("data-open", "internal"); // داخلي افتراضياً للقنوات العشوائية
                 newBtn.innerText = "⭐ " + randomChannel.name; 
                 newBtn.setAttribute("onclick", "playStream(this)");
+                
                 document.getElementById("mainTabs").appendChild(newBtn);
                 populateSelectMenu();
-                playStream(newBtn);
+                
+                if(!isSelectionMode) {
+                    playStream(newBtn);
+                }
                 newBtn.scrollIntoView({ behavior: 'smooth', inline: 'center' });
+                
                 btn.innerHTML = "⚽ اكتشاف قناة رياضية من النت";
             }, 500); 
         }
     </script>
-
 </body></html>
